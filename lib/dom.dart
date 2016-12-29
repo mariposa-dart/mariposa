@@ -41,33 +41,16 @@ class _DomRenderer {
   void _listenToState(m.State state) {
     state.onUpdate.listen((e) {
       _onUpdate.add(e);
-      var newState = new m.State.fromMap(e.newState);
-
       // Todo: Update
-      _state = newState;
+      _updateElem(_root, _rootElement, _state.dump(), e.newState);
+      _state = new m.State.fromMap(e.newState);
     });
   }
 
   void _renderElem(m.Widget source, m.Node node, Element target) {
     var converted = _convertToNode(node);
 
-    converted.attributes.forEach((k, v) {
-      if (k != 'class' && k != 'style') {
-        target.attributes[k] = v.toString();
-      } else if (k == 'class') {
-        if (v is String) {
-          target.attributes['class'] = v;
-        } else if (v is List) {
-          target.classes.addAll(v.map((x) => x.toString()));
-        }
-      } else {
-        if (v is String) {
-          target.attributes['style'] = v;
-        } else if (v is Map<String, dynamic>) {
-          v.forEach(target.style.setProperty);
-        }
-      }
-    });
+    _copyAttributes(converted, target);
 
     for (var childNode in converted.children) {
       if (childNode is m.TextNode) {
@@ -92,6 +75,26 @@ class _DomRenderer {
     }
   }
 
+  void _copyAttributes(m.Node node, Element target) {
+    node.attributes.forEach((k, v) {
+      if (k != 'class' && k != 'style') {
+        target.attributes[k] = v.toString();
+      } else if (k == 'class') {
+        if (v is String) {
+          target.attributes['class'] = v;
+        } else if (v is List) {
+          target.classes.addAll(v.map((x) => x.toString()));
+        }
+      } else {
+        if (v is String) {
+          target.attributes['style'] = v;
+        } else if (v is Map<String, dynamic>) {
+          v.forEach(target.style.setProperty);
+        }
+      }
+    });
+  }
+
   m.Node _convertToNode(m.Node node) {
     if (node is m.Widget) {
       node.state = _state;
@@ -103,5 +106,25 @@ class _DomRenderer {
   void _memoize(m.Node node, Element target) {
     int id = _memo.containsKey(node) ? _memo[node] : _memo[node] = _memo.length;
     target.dataset[MARIPOSA_ID] = id.toString();
+  }
+
+  // Todo: Lists...
+  // Also, keep track of ID's...
+  void _updateElem(m.Node node, Element target, Map<String, dynamic> oldState,
+      Map<String, dynamic> newState) {
+    m.Widget widget = node is m.Widget ? node : null;
+
+    bool shouldUpdate =
+        widget != null ? widget.shouldUpdate(oldState, newState) : true;
+
+    if (shouldUpdate) {
+      if (!target.dataset.containsKey(MARIPOSA_ID)) {
+        _renderElem(widget, node, target);
+      } else {
+        var mariposaId = target.dataset[MARIPOSA_ID];
+        var prev = querySelector('[$MARIPOSA_ID="$mariposaId"]');
+        _copyAttributes(node, target);
+      }
+    }
   }
 }

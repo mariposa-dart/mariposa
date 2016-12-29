@@ -17,7 +17,9 @@ abstract class Widget extends vdom.Node {
 
   void willReceiveAttrs(Map<String, dynamic> newAttrs) {}
 
-  bool shouldUpdate() => true;
+  bool shouldUpdate(
+          Map<String, dynamic> oldState, Map<String, dynamic> newState) =>
+      true;
 
   void beforeUpdate() {}
 

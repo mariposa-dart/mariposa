@@ -1,6 +1,6 @@
 import 'dart:async';
 
-final RegExp _symbol = new RegExp(r'Symbol\("([^"]+)"\)');
+// final RegExp _symbol = new RegExp(r'Symbol\("([^"]+)"\)');
 
 @proxy
 class State {
@@ -26,6 +26,7 @@ class State {
 
   Map<String, dynamic> dump() => _data;
 
+  /**
   @override
   noSuchMethod(Invocation invocation) {
     if (invocation.isGetter || invocation.isAccessor) {
@@ -34,6 +35,7 @@ class State {
       if (match != null) return get(match.group(1));
     }
   }
+  */
 }
 
 class StateUpdateEvent {
