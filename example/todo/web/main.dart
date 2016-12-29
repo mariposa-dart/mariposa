@@ -12,6 +12,10 @@ main() {
     })
     ..render(new AppWidget(), querySelector('#app'), initialState: {
       'title': document.title = 'Todos',
-      'todos': <Todo>[new Todo(title: 'Hello, world!')]
+      'todos': <Todo>[
+        new Todo(id: 0, title: 'Go to Work'),
+        new Todo(id: 1, title: 'Do the Laundry'),
+        new Todo(id: 2, title: 'Watch T.V.', completed: true),
+      ]
     });
 }

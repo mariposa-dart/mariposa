@@ -1,6 +1,7 @@
 class Todo {
+  final int id;
   final String title;
   final bool completed;
 
-  Todo({this.title, this.completed: false});
+  Todo({this.id, this.title, this.completed: false});
 }

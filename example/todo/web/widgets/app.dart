@@ -2,6 +2,7 @@ import 'dart:html';
 import 'package:mariposa/mariposa.dart';
 import '../mdl.dart';
 import 'fab.dart';
+import 'todo_list.dart';
 import 'toolbar.dart';
 
 class AppWidget extends Widget {
@@ -20,7 +21,8 @@ class AppWidget extends Widget {
           new FabWidget()
             ..onClick.listen((_) {
               window.alert('Fab clicked!');
-            })
+            }),
+          new TodoListWidget()
         ])
       ])
     ]);
