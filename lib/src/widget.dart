@@ -1,13 +1,18 @@
+import 'dart:async';
 import 'vdom/vdom.dart' as vdom;
 import 'state.dart';
 
 abstract class Widget extends vdom.Node {
-  final Map<String, dynamic> refs = {};
+  final StreamController _onRender = new StreamController.broadcast();
+  Stream get onRender => _onRender.stream;
+
   State state;
 
   Widget({String tagName: 'div'}) : super(tagName);
 
   vdom.Node render();
+
+  void add(vdom.Node node) => children.add(node);
 
   void afterRender($host) {}
 
