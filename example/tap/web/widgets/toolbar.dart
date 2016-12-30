@@ -3,7 +3,7 @@ import 'package:mariposa/mariposa.dart';
 class Toolbar extends Widget {
   final String title, icon;
 
-  Toolbar(this.title, {this.icon: 'menu'});
+  Toolbar({this.title, this.icon: 'menu'});
 
   @override
   render() {

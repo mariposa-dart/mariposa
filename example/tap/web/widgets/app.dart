@@ -12,18 +12,22 @@ class App extends Widget {
     return h('div', {
       'class': 'mdl-layout mdl-js-layout mdl-layout--fixed-header'
     }, [
-      new Toolbar('Mariposa Demo'),
+      new Toolbar(title: 'Mariposa Demo'),
       h('main', {
         'class': 'mdl-layout__content'
       }, [
         h('div', {
           'class': 'page-content'
         }, [
-          new FloatingActionButton()
+          new FloatingActionButton(icon: 'add')
             ..onClick.listen((_) {
-              state.set('clicks', (state['clicks'] ?? 0) + 1);
+              state.increment('clicks');
             }),
-          text('Button tapped ${state["clicks"] ?? 0} times.')
+          h('div', {
+            'style': {'padding': '1em', 'text-align': 'center'}
+          }, [
+            text('Button tapped ${state["clicks"] ?? 0} times.')
+          ])
         ])
       ])
     ]);

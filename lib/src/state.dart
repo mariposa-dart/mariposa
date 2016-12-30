@@ -26,6 +26,10 @@ class State {
 
   Map<String, dynamic> dump() => _data;
 
+  void increment(String key) {
+    set(key, (get(key) ?? 0) + 1);
+  }
+
   /**
   @override
   noSuchMethod(Invocation invocation) {
