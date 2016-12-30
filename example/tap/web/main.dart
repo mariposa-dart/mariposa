@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:html';
 import 'package:mariposa/dom.dart';
 import 'widgets/widgets.dart';

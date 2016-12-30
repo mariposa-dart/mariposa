@@ -1,3 +1,5 @@
+library mariposa.dom;
+
 import 'dart:async';
 import 'dart:html';
 import 'mariposa.dart' as m;
@@ -77,7 +79,7 @@ class Mariposa {
       target.children.add(childElement);
       _renderInto(
           childNode is m.Widget ? childNode : null, converted, childElement,
-          existingId: _memo[childNode]);
+          existingId: _memo[childNode.hashCode]);
     }
 
     if (source != null) {
