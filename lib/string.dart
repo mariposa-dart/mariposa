@@ -15,7 +15,7 @@ class Mariposa {
 
     _renderInto(state, memo, _convertToWidget(rootNode), rootNode, target);
 
-    return target.innerHtml;
+    return target.outerHtml;
   }
 
   void _renderInto(m.State state, Map<int, int> memo, m.Widget source,
