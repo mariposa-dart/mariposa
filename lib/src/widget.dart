@@ -1,34 +1,13 @@
-import 'dart:async';
-import 'vdom/vdom.dart' as vdom;
+import 'package:html_builder/html_builder.dart';
 import 'state.dart';
 
-abstract class Widget extends vdom.Node {
-  final StreamController _onRender = new StreamController.broadcast();
-  Stream get onRender => _onRender.stream;
+/// TODO: Lifecycle
+abstract class Widget<T> extends Node {
+  Widget() : super('div');
 
-  State state;
+  /// Determines if a change in state should trigger a re-rendering of this widget.
+  bool shouldUpdate(State<T> prevState, State<T> newState) => true;
 
-  Widget({String tagName: 'div'}) : super(tagName);
-
-  vdom.Node render();
-
-  void add(vdom.Node node) => children.add(node);
-
-  void afterRender($host) {}
-
-  void beforeMount() {}
-
-  void afterMount() {}
-
-  void willReceiveAttrs(Map<String, dynamic> newAttrs) {}
-
-  bool shouldUpdate(
-          Map<String, dynamic> oldState, Map<String, dynamic> newState) =>
-      true;
-
-  void beforeUpdate() {}
-
-  void afterUpdate() {}
-
-  // Todo: setState, forceUpdate
+  /// Produces an HTML AST representing the [state] of this widget.
+  Node render(State<T> state);
 }

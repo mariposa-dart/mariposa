@@ -1,6 +1,6 @@
 name: todo
+publish_to: none
 dependencies:
-  js: ^0.6.0
   mariposa:
     path: ../../
 dev_dependencies:

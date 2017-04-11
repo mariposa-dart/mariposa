@@ -1,51 +1,20 @@
-import 'dart:async';
+/// An abstract interface for safely managing application state.
+abstract class State<T> {
+  /// Retrieves the value of a given [key] within the state.
+  T get(String key);
 
-// final RegExp _symbol = new RegExp(r'Symbol\("([^"]+)"\)');
+  /// Assigns, or re-assigns a value within the state.
+  void set(String key, T value);
 
-@proxy
-class State {
-  final Map<String, dynamic> _data;
-  final StreamController<StateUpdateEvent> _onUpdate =
-      new StreamController<StateUpdateEvent>();
+  /// Sets an immutable member within the state. This can never be re-assigned.
+  void singleton(String key, T value);
 
-  Stream<StateUpdateEvent> get onUpdate => _onUpdate.stream;
+  /// Returns a scoped [State] of values prefixed with a given key.
+  State<U> scope<U>(String prefix);
 
-  State() : _data = new Map<String, dynamic>.unmodifiable({});
+  T operator [](String key) => get(key);
 
-  State.fromMap(Map<String, dynamic> data)
-      : _data = new Map<String, dynamic>.unmodifiable(data);
-
-  operator [](String key) => get(key);
-
-  get(String key) => _data[key];
-
-  void set(String key, value) {
-    var newState = new Map.unmodifiable(new Map.from(_data)..[key] = value);
-    _onUpdate.add(new StateUpdateEvent(key, value, _data, newState));
+  void operator []=(String key, T value) {
+    set(key, value);
   }
-
-  Map<String, dynamic> dump() => _data;
-
-  void increment(String key) {
-    set(key, (get(key) ?? 0) + 1);
-  }
-
-  /**
-  @override
-  noSuchMethod(Invocation invocation) {
-    if (invocation.isGetter || invocation.isAccessor) {
-      final match = _symbol.firstMatch(invocation.memberName.toString());
-
-      if (match != null) return get(match.group(1));
-    }
-  }
-  */
-}
-
-class StateUpdateEvent {
-  final String key;
-  final value;
-  final Map<String, dynamic> oldState, newState;
-
-  StateUpdateEvent(this.key, this.value, this.oldState, this.newState);
 }
