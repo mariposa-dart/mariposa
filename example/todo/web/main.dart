@@ -4,7 +4,5 @@ import 'package:todo/todo.dart';
 
 main() {
   runApp(querySelector('#app'), () => new TodoApp(),
-      defaultState: () => {
-            'todos': [new Todo('Clean your room', completed: true)]
-          });
+      defaultState: () => {'todos': []});
 }

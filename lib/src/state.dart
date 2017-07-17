@@ -18,6 +18,12 @@ abstract class State<T> {
   /// Returns a scoped [State] of values prefixed with a given key.
   State<U> scope<U>(String prefix);
 
+  /// Adds a value to the list identified by [key].
+  void add(String key, value) {
+    dynamic v = new List.from(get(key) as Iterable)..add(value);
+    set(key, v as T);
+  }
+
   T operator [](String key) => get(key);
 
   void operator []=(String key, T value) {

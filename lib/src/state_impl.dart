@@ -1,19 +1,24 @@
 import 'dart:async';
 import 'state.dart';
 
-class DefaultState<T> extends State<T> {
+class StateImpl<T> extends State<T> {
   bool _locked = false;
   final StreamController<StateChangeInfo<T>> _onChange = new StreamController<StateChangeInfo<T>>();
 
   final Map<String, T> data = {};
   final Map<String, T> singletons = {};
-  final Map<String, DefaultState> scoped = {};
-  final DefaultState<T> parent;
+  final Map<String, StateImpl> scoped = {};
+  final StateImpl<T> parent;
   final bool bubble;
 
   Stream<StateChangeInfo<T>> get onChange => _onChange.stream;
 
-  DefaultState([this.parent, this.bubble]);
+  StateImpl([this.parent, this.bubble]);
+
+  void close() {
+    scoped.values.forEach((s) => s.close());
+    _onChange.close();
+  }
 
   void lock() {
     _locked = true;
@@ -33,7 +38,7 @@ class DefaultState<T> extends State<T> {
 
   @override
   State scope<U>(String prefix) => scoped.putIfAbsent(prefix, () {
-        var child = new DefaultState(this, bubble);
+        var child = new StateImpl(this, bubble);
 
         if (bubble) {
           child.onChange.listen((info) {

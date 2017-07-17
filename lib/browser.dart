@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:html' as html;
 import 'package:html_builder/html_builder.dart';
 import 'package:html_builder_vdom/html_builder_vdom.dart';
-import 'src/default_state.dart';
+import 'package:meta/meta.dart';
+import 'src/state_impl.dart';
 import 'mariposa.dart';
 
 typedef Widget<T> MariposaApplication<T>();
@@ -18,7 +20,7 @@ void runApp<T>(html.HtmlElement container, MariposaApplication<T> app,
 
 class _Mariposa<T> {
   DomRenderer _renderer;
-  DefaultState<T> _state;
+  StateImpl<T> _state;
   final html.HtmlElement container;
   final MariposaApplication<T> entryPoint;
   final bool bubble;
@@ -27,7 +29,7 @@ class _Mariposa<T> {
 
   _Mariposa(this.container, this.entryPoint, this.bubble, this.defaultState,
       this.onStateChange) {
-    _state = new DefaultState<T>();
+    _state = new StateImpl<T>(null, bubble);
 
     if (defaultState != null) {
       _state.data.addAll(defaultState());
@@ -35,18 +37,24 @@ class _Mariposa<T> {
 
     _state.lock();
     _renderer = new DomRenderer(container);
-    Node currentApp;
-    var a = entryPoint();
-    var r = _renderer.render(currentApp = renderWidgets(a.render(_state)));
-    a.afterRender(r, _state);
+    var app = entryPoint();
+    var node = app.render(_state);
+    var appId = node.hashCode;
+    var renderState = _renderer.resolveNodeToState(0, node, container);
+    var target =
+        _renderer.renderFresh(renderState).target; //_renderer.render(node);
+    _DomElementImpl dom = new _DomElementImpl(target);
+    app.afterRender(dom, _state);
 
-    var rState = _renderer.resolveNodeToState(-1, currentApp);
-
-    _state.onChange.listen((info) {
+    void handleState(StateChangeInfo<T> info) {
+      // Trigger any state change listeners
       if (onStateChange != null) onStateChange(info);
 
       var keys = info.key.split('.');
-      DefaultState targetState = _state;
+      StateImpl targetState = new StateImpl(null, bubble);
+      targetState.data.addAll(_state.data);
+      _state.close();
+      _state = targetState;
 
       for (int i = 0; i < keys.length - 1; i++) {
         targetState = targetState.scoped[keys[i]];
@@ -54,16 +62,23 @@ class _Mariposa<T> {
 
       var lastKey = keys.last;
       targetState.data[lastKey] = info.value;
-      print(_state.data);
 
-      var id = currentApp.hashCode;
-      var a = entryPoint();
+      // Now, re-render the app.
+      dom.close();
 
-      var r = _renderer.renderDiffed(
-          rState, currentApp = new _SneakyNode(renderWidgets(a.render(_state)), id));
-      a.afterRender(r.target, _state);
-      // TODO: After render...
-    });
+      var app = entryPoint();
+      var node = app.render(_state);
+      node = new _SneakyNode(node, appId);
+      _renderer.renderDiffed(renderState, node);
+      dom = new _DomElementImpl(target);
+      app.afterRender(dom, _state);
+      //_renderer.renderNode(container, entryPoint().render(_state));
+      // TODO: After render for nested widgets...
+
+      _state.onChange.listen(handleState);
+    }
+
+    _state.onChange.listen(handleState);
   }
 
   Node renderWidgets(Node inputNode) {
@@ -74,7 +89,7 @@ class _Mariposa<T> {
 }
 
 class _SneakyNode<T> implements Node {
-  final Widget<T> inner;
+  final Node inner;
   final int code;
 
   _SneakyNode(this.inner, this.code);
@@ -92,4 +107,84 @@ class _SneakyNode<T> implements Node {
 
   @override
   String get tagName => inner.tagName;
+}
+
+class _DomElementImpl implements AbstractElement {
+  final Map<String, List<StreamSubscription>> _listeners = {};
+  final html.Element $el;
+  List<AbstractElement> _children, _queries = [];
+  AbstractElement _parent;
+
+  _DomElementImpl(this.$el);
+
+  @override
+  Future close() {
+    _children?.forEach((el) => el.close());
+    _queries?.forEach((el) => el.close());
+    _parent?.close();
+
+    _listeners.values.forEach((listeners) {
+      listeners.forEach((s) => s.cancel());
+    });
+
+    return new Future.value();
+  }
+
+  @override
+  void listen<T extends html.Event>(
+      String eventName, @checked void callback(T event)) {
+    var list = _listeners.putIfAbsent(eventName, () => []);
+    var sub = $el.on[eventName].listen(callback);
+    list.add(sub);
+  }
+
+  @override
+  Iterable<AbstractElement> querySelectorAll(String selectors) {
+    var results =
+        $el.querySelectorAll(selectors).map((c) => new _DomElementImpl(c));
+    _queries.addAll(results);
+    return results;
+  }
+
+  @override
+  AbstractElement querySelector(String selectors) {
+    var node = $el.querySelector(selectors);
+    if (node == null)
+      return null;
+    else {
+      var result = new _DomElementImpl(node);
+      _queries.add(result);
+      return result;
+    }
+  }
+
+  @override
+  AbstractElement get parent => _parent ??= new _DomElementImpl($el.parent);
+
+  @override
+  Iterable<AbstractElement> get children {
+    return _children ??=
+        $el.children.map((c) => new _DomElementImpl(c)).toList();
+  }
+
+  @override
+  Map<String, String> get attributes {
+    return $el.attributes;
+  }
+
+  @override
+  String get value {
+    if ($el is html.InputElement)
+      return ($el as html.InputElement).value;
+    else
+      return attributes['value'];
+  }
+
+  @override
+  void set value(String value) {
+    if ($el is html.InputElement)
+      ($el as html.InputElement).value = value;
+    else
+      attributes['value'] = value;
+  }
 }
