@@ -1,3 +1,4 @@
+import 'dart:html' hide Node;
 import 'package:html_builder/html_builder.dart';
 import 'state.dart';
 
@@ -10,4 +11,8 @@ abstract class Widget<T> extends Node {
 
   /// Produces an HTML AST representing the [state] of this widget.
   Node render(State<T> state);
+
+  void afterRender(HtmlElement $el, State<T> state) {
+
+  }
 }

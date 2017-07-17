@@ -5,3 +5,5 @@ author: Tobe O <thosakwe@gmail.com>
 homepage: https://github.com/mariposa-dart/mariposa
 dependencies:
   html_builder: ^1.0.0
+  html_builder_vdom:
+    git: https://github.com/thosakwe/html_builder_vdom

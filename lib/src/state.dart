@@ -1,5 +1,11 @@
+import 'dart:async';
+
+
 /// An abstract interface for safely managing application state.
 abstract class State<T> {
+  /// Fires when a value is changed.
+  Stream<StateChangeInfo<T>> get onChange;
+
   /// Retrieves the value of a given [key] within the state.
   T get(String key);
 
@@ -17,4 +23,9 @@ abstract class State<T> {
   void operator []=(String key, T value) {
     set(key, value);
   }
+}
+
+abstract class StateChangeInfo<T> {
+  String get key;
+  T get value;
 }
