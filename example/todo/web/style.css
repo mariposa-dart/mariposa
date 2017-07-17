@@ -1,0 +1,3 @@
+.todo_item--complete {
+    text-decoration: line-through;
+}

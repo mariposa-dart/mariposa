@@ -40,7 +40,7 @@ class StateImpl<T> extends State<T> {
   State scope<U>(String prefix) => scoped.putIfAbsent(prefix, () {
         var child = new StateImpl(this, bubble);
 
-        if (bubble) {
+        if (bubble == true) {
           child.onChange.listen((info) {
             _onChange
                 .add(

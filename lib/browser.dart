@@ -6,15 +6,11 @@ import 'package:meta/meta.dart';
 import 'src/state_impl.dart';
 import 'mariposa.dart';
 
-typedef Widget<T> MariposaApplication<T>();
-typedef Map<String, T> DefaultStateProvider<T>();
-typedef void StateChangeListener<T>(StateChangeInfo<T> changeInfo);
-
 void runApp<T>(html.HtmlElement container, MariposaApplication<T> app,
     {DefaultStateProvider<T> defaultState,
     bool bubbleStateEvents,
     StateChangeListener<T> onStateChange}) {
-  new _Mariposa(
+  new _Mariposa<T>(
       container, app, bubbleStateEvents != false, defaultState, onStateChange);
 }
 
@@ -163,8 +159,8 @@ class _DomElementImpl implements AbstractElement {
 
   @override
   Iterable<AbstractElement> get children {
-    return _children ??=
-        $el.children.map((c) => new _DomElementImpl(c)).toList();
+    return _children ??= new List<AbstractElement>.unmodifiable(
+        $el.children.map((c) => new _DomElementImpl(c)));
   }
 
   @override
