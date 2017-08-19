@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:html' as html;
 import 'package:html_builder/html_builder.dart';
-import 'package:html_builder_vdom/html_builder_vdom.dart';
+import 'package:js/js.dart';
 import 'package:meta/meta.dart';
 import 'src/state_impl.dart';
+import 'incremental_dom.dart' as idom;
 import 'mariposa.dart';
 
 void runApp<T>(html.HtmlElement container, MariposaApplication<T> app,
@@ -15,13 +16,13 @@ void runApp<T>(html.HtmlElement container, MariposaApplication<T> app,
 }
 
 class _Mariposa<T> {
-  DomRenderer _renderer;
   StateImpl<T> _state;
   final html.HtmlElement container;
   final MariposaApplication<T> entryPoint;
   final bool bubble;
   final DefaultStateProvider<T> defaultState;
   final StateChangeListener<T> onStateChange;
+  final List<_DomElementImpl> _refs = [];
 
   _Mariposa(this.container, this.entryPoint, this.bubble, this.defaultState,
       this.onStateChange) {
@@ -32,77 +33,97 @@ class _Mariposa<T> {
     }
 
     _state.lock();
-    _renderer = new DomRenderer(container);
-    var app = entryPoint();
-    var node = app.render(_state);
-    var appId = node.hashCode;
-    var renderState = _renderer.resolveNodeToState(0, node, container);
-    var target =
-        _renderer.renderFresh(renderState).target; //_renderer.render(node);
-    _DomElementImpl dom = new _DomElementImpl(target);
-    app.afterRender(dom, _state);
+    idom.patch(container, allowInterop(_patchCallback));
 
     void handleState(StateChangeInfo<T> info) {
-      // Trigger any state change listeners
-      if (onStateChange != null) onStateChange(info);
+      if (info.key != null) {
+        // Trigger any state change listeners
+        if (onStateChange != null) onStateChange(info);
 
-      var keys = info.key.split('.');
-      StateImpl targetState = new StateImpl(null, bubble);
-      targetState.data.addAll(_state.data);
-      _state.close();
-      _state = targetState;
+        var keys = info.key.split('.');
+        StateImpl targetState = new StateImpl(null, bubble);
+        targetState.data.addAll(_state.data);
+        _state.close();
+        _state = targetState;
 
-      for (int i = 0; i < keys.length - 1; i++) {
-        targetState = targetState.scoped[keys[i]];
+        for (int i = 0; i < keys.length - 1; i++) {
+          targetState = targetState.scoped[keys[i]];
+        }
+
+        var lastKey = keys.last;
+        targetState.data[lastKey] = info.value;
       }
 
-      var lastKey = keys.last;
-      targetState.data[lastKey] = info.value;
+      while (_refs.isNotEmpty) _refs.removeAt(0).close();
 
       // Now, re-render the app.
-      dom.close();
-
-      var app = entryPoint();
-      var node = app.render(_state);
-      node = new _SneakyNode(node, appId);
-      _renderer.renderDiffed(renderState, node);
-      dom = new _DomElementImpl(target);
-      app.afterRender(dom, _state);
-      //_renderer.renderNode(container, entryPoint().render(_state));
-      // TODO: After render for nested widgets...
-
-      _state.onChange.listen(handleState);
+      idom.patch(container, allowInterop(_patchCallback));
+      if (info.key != null) _state.onChange.listen(handleState);
     }
 
     _state.onChange.listen(handleState);
   }
 
-  Node renderWidgets(Node inputNode) {
-    // TODO: Replace children...
-    // Maybe have to have a custom override element that implements the same hashCode?
-    return inputNode;
+  static List<String> compileAttributes(Map<String, dynamic> props) {
+    var out = <String>[];
+
+    props.forEach((k, v) {
+      if (v == null || v == false) return;
+
+      out.add(k);
+
+      if (v == true)
+        out.add(k);
+      else if (v is List)
+        out.add(v.join(', '));
+      else if (v is Map) {
+        int i = 0;
+        var b = v.keys.fold<StringBuffer>(new StringBuffer(), (out, k) {
+          if (i++ > 0) out.write('; ');
+          return out..write('$k: ${v[k]}');
+        });
+        out.add(b.toString());
+      } else
+        out.add(v.toString());
+    });
+
+    return out;
   }
-}
 
-class _SneakyNode<T> implements Node {
-  final Node inner;
-  final int code;
-
-  _SneakyNode(this.inner, this.code);
-
-  @override
-  int get hashCode {
-    return code;
+  void _patchCallback([_]) {
+    _renderInner(entryPoint(), _state);
   }
 
-  @override
-  Map<String, dynamic> get attributes => inner.attributes;
+  void _renderInner(Node node, State state) {
+    if (node is Widget) {
+      _renderWidget(node, state);
+    } else {
+      _renderNode(node, state);
+    }
+  }
 
-  @override
-  List<Node> get children => inner.children;
+  html.Element _renderNode(Node node, State state) {
+    if (node is TextNode) {
+      idom.text(node.text);
+      return null;
+    } else {
+      // TODO: Assign ID's?
+      var attrs = compileAttributes(node.attributes);
+      idom.elementOpen(node.tagName, node.hashCode.toString(), attrs);
 
-  @override
-  String get tagName => inner.tagName;
+      for (var c in node.children) _renderInner(c, state);
+
+      return idom.elementClose(node.tagName);
+    }
+  }
+
+  void _renderWidget(Widget widget, State state) {
+    var node = widget.render(state);
+    var target = _renderNode(node, state);
+    var ref = new _DomElementImpl(target);
+    _refs.add(ref);
+    widget.afterRender(ref, state);
+  }
 }
 
 class _DomElementImpl implements AbstractElement {

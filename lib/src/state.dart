@@ -6,6 +6,9 @@ abstract class State<T> {
   /// Fires when a value is changed.
   Stream<StateChangeInfo<T>> get onChange;
 
+  /// Perform an action, and then manually trigger a diff.
+  void notify(void callback());
+
   /// Retrieves the value of a given [key] within the state.
   T get(String key);
 

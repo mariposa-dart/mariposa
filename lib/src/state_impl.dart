@@ -3,7 +3,10 @@ import 'state.dart';
 
 class StateImpl<T> extends State<T> {
   bool _locked = false;
-  final StreamController<StateChangeInfo<T>> _onChange = new StreamController<StateChangeInfo<T>>();
+  final StreamController<StateChangeInfo<T>> _onChange =
+      new StreamController<StateChangeInfo<T>>(
+    sync: true,
+  );
 
   final Map<String, T> data = {};
   final Map<String, T> singletons = {};
@@ -25,6 +28,12 @@ class StateImpl<T> extends State<T> {
   }
 
   @override
+  void notify(void callback()) {
+    callback();
+    _onChange.add(new _StateChangeInfoImpl(null, null));
+  }
+
+  @override
   T get(String key) {
     if (singletons.containsKey(key))
       return singletons[key];
@@ -37,19 +46,29 @@ class StateImpl<T> extends State<T> {
   }
 
   @override
-  State scope<U>(String prefix) => scoped.putIfAbsent(prefix, () {
-        var child = new StateImpl(this, bubble);
+  State<U> scope<U>(String prefix) {
+    return null;
+    /*
+    return scoped.putIfAbsent(
+      prefix,
+      () => _scope(prefix),
+      // TODO: How the hell do I make this DDC-compatible?
+    );
+    */
+  }
 
-        if (bubble == true) {
-          child.onChange.listen((info) {
-            _onChange
-                .add(
-                new _StateChangeInfoImpl('$prefix.${info.key}', info.value));
-          });
-        }
+  State<dynamic> _scope(String prefix) {
+    var child = new StateImpl(this, bubble);
 
-        return child;
+    if (bubble == true) {
+      child.onChange.listen((info) {
+        _onChange
+            .add(new _StateChangeInfoImpl('$prefix.${info.key}', info.value));
       });
+    }
+
+    return child as State<dynamic>;
+  }
 
   @override
   void set(String key, T value) {

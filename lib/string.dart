@@ -34,8 +34,21 @@ class _Mariposa<T> {
     }
 
     if (a.children.any((n) => n is Widget)) {
-      a = new Node(a.tagName, a.attributes,
-          a.children.map((n) => build(n, node, state)).toList());
+      a = new Node(
+        a.tagName,
+        a.attributes,
+        a.children.map((n) => build(n, node, state)).toList(),
+      );
+    }
+
+    if (parent == null) {
+      var attrs = new Map<String, dynamic>.from(a.attributes)
+        ..['data-mariposa'] = 'true';
+      a = new Node(
+        a.tagName,
+        attrs,
+        a.children,
+      );
     }
 
     return a;
