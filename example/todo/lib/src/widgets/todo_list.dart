@@ -29,12 +29,6 @@ class TodoList extends Widget {
   }
 
   render(_) {
-    /*
-  <div class="ui top attached tabular menu">
-    <div class="item">Tab</div>
-  </div>
-   */
-
     String itemType(bool type) => tab == type ? 'active item' : 'item';
 
     var tabMenu = div(className: 'ui top attached tabular menu', c: [
@@ -60,6 +54,7 @@ class TodoList extends Widget {
     } else {
       content = div(c: [
         div(className: 'ui message', c: [
+          br(),
           text('Click a todo to toggle complete/incomplete.'),
         ]),
         br(),
@@ -67,32 +62,7 @@ class TodoList extends Widget {
         div(
           className: 'ui middle aligned divided list',
           c: selected.map((todo) {
-            /*
-            <div class="item">
-              <div class="right floated content">
-                <div class="ui button">Add</div>
-              </div>
-              <img class="ui avatar image" src="/images/avatar2/small/lena.png">
-              <div class="content">
-                Lena
-              </div>
-            </div>
-             */
-            return div(
-              className: 'item',
-              c: [
-                div(className: 'right floated content', c: [
-                  button(className: 'ui negative button', c: [
-                    i(className: 'delete icon'),
-                    text('Delete'),
-                  ]),
-                ]),
-                div(
-                  className: 'content',
-                  c: [text(todo.text)],
-                ),
-              ],
-            );
+            return new TodoItem(todo);
           }),
         ),
       ]);

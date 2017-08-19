@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:html' as html;
+import 'dart:js';
 import 'package:html_builder/html_builder.dart';
 import 'package:js/js.dart';
 import 'package:meta/meta.dart';
@@ -62,17 +63,30 @@ class _Mariposa<T> {
     }
 
     _state.onChange.listen(handleState);
+
+    idom.notifications.nodesRemoved = (nodes) {
+      nodes.forEach((node) {
+        var refs = _refs.where((d) => d.$el == node);
+
+        for (var ref in refs)
+          _refs.remove(ref..close());
+      });
+    };
   }
 
-  static List<String> compileAttributes(Map<String, dynamic> props) {
-    var out = <String>[];
+  static List compileAttributes(Map<String, dynamic> props) {
+    var out = [];
 
     props.forEach((k, v) {
       if (v == null || v == false) return;
 
       out.add(k);
 
-      if (v == true)
+      if (v is JsFunction)
+        out.add(v);
+      else if (v is JsObject)
+        out.add(v);
+      else if (v == true)
         out.add(k);
       else if (v is List)
         out.add(v.join(', '));
@@ -109,7 +123,7 @@ class _Mariposa<T> {
     } else {
       // TODO: Assign ID's?
       var attrs = compileAttributes(node.attributes);
-      idom.elementOpen(node.tagName, node.hashCode.toString(), attrs);
+      idom.elementOpen(node.tagName, node.attributes['key']?.toString() ?? '', attrs);
 
       for (var c in node.children) _renderInner(c, state);
 
@@ -120,16 +134,26 @@ class _Mariposa<T> {
   void _renderWidget(Widget widget, State state) {
     var node = widget.render(state);
     var target = _renderNode(node, state);
-    var ref = new _DomElementImpl(target);
-    _refs.add(ref);
-    widget.afterRender(ref, state);
+
+    if (!_refs.any((d) => d.$el == target)) {
+      var ref = new _DomElementImpl(target);
+      _refs.add(ref);
+      widget.afterRender(ref, state);
+    }
   }
 }
 
-class _DomElementImpl implements AbstractElement {
+/// Unwraps an [AbstractElement] into its native element.
+html.Element unwrap(AbstractElement elementRef) {
+  if (elementRef is! _DomElementImpl)
+    throw new UnsupportedError('Cannot unwrap ${elementRef.runtimeType} in the browser.');
+  return (elementRef as _DomElementImpl).$el;
+}
+
+class _DomElementImpl implements AbstractElement<html.Event> {
   final Map<String, List<StreamSubscription>> _listeners = {};
   final html.Element $el;
-  List<AbstractElement> _children, _queries = [];
+  List<AbstractElement<html.Event>> _children, _queries = [];
   AbstractElement _parent;
 
   _DomElementImpl(this.$el);
@@ -156,7 +180,7 @@ class _DomElementImpl implements AbstractElement {
   }
 
   @override
-  Iterable<AbstractElement> querySelectorAll(String selectors) {
+  Iterable<AbstractElement<html.Event>> querySelectorAll(String selectors) {
     var results =
         $el.querySelectorAll(selectors).map((c) => new _DomElementImpl(c));
     _queries.addAll(results);
@@ -164,7 +188,7 @@ class _DomElementImpl implements AbstractElement {
   }
 
   @override
-  AbstractElement querySelector(String selectors) {
+  AbstractElement<html.Event> querySelector(String selectors) {
     var node = $el.querySelector(selectors);
     if (node == null)
       return null;
@@ -176,11 +200,12 @@ class _DomElementImpl implements AbstractElement {
   }
 
   @override
-  AbstractElement get parent => _parent ??= new _DomElementImpl($el.parent);
+  AbstractElement<html.Event> get parent =>
+      _parent ??= new _DomElementImpl($el.parent);
 
   @override
-  Iterable<AbstractElement> get children {
-    return _children ??= new List<AbstractElement>.unmodifiable(
+  Iterable<AbstractElement<html.Event>> get children {
+    return _children ??= new List<AbstractElement<html.Event>>.unmodifiable(
         $el.children.map((c) => new _DomElementImpl(c)));
   }
 

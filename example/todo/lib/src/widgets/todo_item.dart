@@ -14,19 +14,37 @@ class TodoItem extends Widget {
 
   @override
   Node render(State state) {
-    return li(
-      className: todoItemClass(todo.completed),
+    return div(
+      className: 'item',
       c: [
-        text(todo.text),
+        div(className: 'right floated content', c: [
+          button(className: 'ui negative button', c: [
+            i(className: 'delete icon'),
+            text('Delete'),
+          ]),
+        ]),
+        div(
+          className: 'main content',
+          c: [text(todo.text)],
+        ),
       ],
     );
   }
 
   @override
   void afterRender(AbstractElement $element, State state) {
-    $element.listen('click', (_) {
+    var $content = $element.querySelector('.main.content');
+    var $button = $element.querySelector('button');
+
+    $content.listen('click', (_) {
       state.notify(() {
         todo.completed = !todo.completed;
+      });
+    });
+
+    $button.listen('click', (_) {
+      state.notify(() {
+        state['todos'].remove(todo);
       });
     });
   }

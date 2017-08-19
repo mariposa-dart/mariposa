@@ -67,7 +67,7 @@ class StateImpl<T> extends State<T> {
       });
     }
 
-    return child as State<dynamic>;
+    return child;
   }
 
   @override

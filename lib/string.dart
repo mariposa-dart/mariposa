@@ -9,6 +9,7 @@ Node runApp<T>(MariposaApplication<T> app,
   return m.render();
 }
 
+// TODO: Run afterRender hooks
 class _Mariposa<T> {
   final MariposaApplication<T> app;
   final DefaultStateProvider<T> defaultState;
@@ -30,7 +31,7 @@ class _Mariposa<T> {
     var a = app().render(state);
 
     while (a is Widget) {
-      a = a.render(state);
+      a = (a as Widget).render(state);
     }
 
     if (a.children.any((n) => n is Widget)) {
@@ -73,10 +74,17 @@ class _StringElementImpl implements AbstractElement {
   }
 
   @override
-  Iterable<AbstractElement> querySelectorAll(String selectors) {}
+  Iterable<AbstractElement> querySelectorAll(String selectors) {
+    // TODO: Query selectors
+    throw new UnsupportedError(
+        'Query selectors are not yet available for server-side rendering.');
+  }
 
   @override
-  AbstractElement querySelector(String selectors) {}
+  AbstractElement querySelector(String selectors) {
+    throw new UnsupportedError(
+        'Query selectors are not yet available for server-side rendering.');
+  }
 
   @override
   Map<String, String> get attributes {
