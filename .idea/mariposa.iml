@@ -17,19 +17,8 @@
       <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludeFolder url="file://$MODULE_DIR$/example/counter/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/example/counter/build" />
-      <excludeFolder url="file://$MODULE_DIR$/example/counter/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/example/counter/web/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/example/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/todo/.pub" />
-      <excludeFolder url="file://$MODULE_DIR$/example/todo/bin/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/todo/build" />
-      <excludeFolder url="file://$MODULE_DIR$/example/todo/lib/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/example/todo/lib/src/models/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/example/todo/lib/src/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/example/todo/lib/src/widgets/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/example/todo/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/example/todo/web/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/packages" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
     </content>
@@ -37,5 +26,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Dart SDK" level="project" />
     <orderEntry type="library" name="Dart Packages" level="project" />
+    <orderEntry type="library" name="incremental-dom" level="application" />
   </component>
 </module>
