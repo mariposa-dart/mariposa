@@ -120,7 +120,7 @@ class _DomElementImpl implements AbstractElement<Event, Element> {
   final Map<String, List<StreamSubscription>> _listeners = {};
   final Element nativeElement;
   List<AbstractElement<Event, Element>> _children, _queries = [];
-  AbstractElement _parent;
+  AbstractElement<Event, Element> _parent;
   void Function() _onDestroy;
 
   _DomElementImpl(this.nativeElement) {
@@ -141,10 +141,10 @@ class _DomElementImpl implements AbstractElement<Event, Element> {
   }
 
   @override
-  StreamSubscription<T> listen<T extends Event>(
+  StreamSubscription<T> listen<T>(
       String eventName, void callback(T event)) {
     var list = _listeners.putIfAbsent(eventName, () => []);
-    var sub = nativeElement.on[eventName].listen(callback);
+    var sub = nativeElement.on[eventName].cast<T>().listen(callback);
     list.add(sub);
     return sub;
   }

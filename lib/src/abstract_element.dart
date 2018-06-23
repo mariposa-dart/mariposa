@@ -36,7 +36,7 @@ abstract class AbstractElement<T, Native> {
   /// Attaches a callback function to a specific event.
   ///
   /// This callback will be disposed automatically by [close].
-  StreamSubscription<U> listen<U extends T>(String eventName, void callback(U event));
+  StreamSubscription<U> listen<U>(String eventName, void callback(U event));
 
   /// Closes any event listeners on this element.
   Future close();

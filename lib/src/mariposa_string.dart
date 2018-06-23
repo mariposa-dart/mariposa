@@ -17,7 +17,8 @@ String render(Node Function() app, {StringRenderer Function() createRenderer}) {
 
 Node _renderInner(Node node, StringRenderer renderer, _StringElementImpl parent,
     Stream events) {
-  if (node is Widget) node = _renderWidget(node, renderer, parent, events);
+  if (node is Widget)
+    node = _renderWidget(node as Widget, renderer, parent, events);
   return _renderNode(node, renderer, events);
 }
 
@@ -40,7 +41,7 @@ Node _renderWidget(Widget widget, StringRenderer renderer,
 class _StringElementImpl implements AbstractElement<dynamic, Node> {
   final Stream events;
   final Node nativeElement;
-  final AbstractElement _parent;
+  final AbstractElement<dynamic, Node> _parent;
   List<AbstractElement<dynamic, Node>> _children;
 
   _StringElementImpl(this.nativeElement, this._parent, this.events);
@@ -52,7 +53,7 @@ class _StringElementImpl implements AbstractElement<dynamic, Node> {
 
   @override
   StreamSubscription<T> listen<T>(String eventName, void callback(T event)) {
-    return events.listen(callback);
+    return events.cast<T>().listen(callback);
   }
 
   @override
@@ -70,7 +71,8 @@ class _StringElementImpl implements AbstractElement<dynamic, Node> {
 
   @override
   Map<String, String> get attributes {
-    return nativeElement.attributes;
+    return nativeElement.attributes
+        .map((k, v) => new MapEntry(k, v.toString()));
   }
 
   @override
