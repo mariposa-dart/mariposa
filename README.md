@@ -64,6 +64,23 @@ import 'package:html_builder/elements.dart';
 import 'package:mariposa/dom.dart' as mariposa;
 ```
 
+## Passing down state and context
+Passing state down a stateless tree can become ugly very quickly.
+However, Mariposa provides a class called `ContextAwareWidget`, which can interact
+with a `RenderContext`, a scoped state handled internally by Mariposa.
+
+The `Context` class has provisions for dependency injection, so you don't need *any* hacks
+to have fully independent, context-aware widgets:
+
+```dart
+class MyWidget extends ContextAwareWidget {
+  @override
+  Node contextAwareRender(RenderContext ctx) {
+    // Return something...
+  }
+}
+```
+
 ## Server-side Rendering
 It's easy; in fact, server-side rendering is Mariposa's
 bread-and-butter. DOM support was added long after string rendering:

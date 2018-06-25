@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:html_builder/html_builder.dart';
 import 'package:zen/zen.dart';
 import 'abstract_element.dart';
+import 'render_context.dart';
 import 'widgets.dart';
 
 /// Renders a tree into a [String].
@@ -9,32 +10,41 @@ String render(Node Function() app, {StringRenderer Function() createRenderer}) {
   createRenderer ??= () => new StringRenderer();
   var renderer = createRenderer();
   var noOpStreamCtrl = new StreamController.broadcast();
-  var out = _renderInner(app(), renderer, null, noOpStreamCtrl.stream);
+  var out = _renderInner(
+      app(), renderer, null, noOpStreamCtrl.stream, new RenderContext(null));
   var result = renderer.render(out);
   noOpStreamCtrl.close();
   return result;
 }
 
 Node _renderInner(Node node, StringRenderer renderer, _StringElementImpl parent,
-    Stream events) {
+    Stream events, RenderContext context) {
   if (node is Widget)
-    node = _renderWidget(node as Widget, renderer, parent, events);
-  return _renderNode(node, renderer, events);
+    node = _renderWidget(
+        node as Widget, renderer, parent, events, context.createChild());
+  return _renderNode(node, renderer, events, context.createChild());
 }
 
-Node _renderNode(Node node, StringRenderer renderer, Stream events) => node;
+Node _renderNode(Node node, StringRenderer renderer, Stream events,
+        RenderContext context) =>
+    node;
 
 Node _renderWidget(Widget widget, StringRenderer renderer,
-    _StringElementImpl parent, Stream events) {
+    _StringElementImpl parent, Stream events, RenderContext context) {
   var children = <Node>[];
-  var node = widget.render();
+  var node = widget is ContextAwareWidget
+      ? widget.contextAwareRender(context)
+      : widget.render();
   var ref = new _StringElementImpl(node, parent, events);
 
   for (var child in node.children) {
-    children.add(_renderInner(child, renderer, ref, events));
+    children
+        .add(_renderInner(child, renderer, ref, events, context.createChild()));
   }
 
-  widget.afterRender(ref);
+  node is ContextAwareWidget
+      ? node.contextAwareAfterRender(context, ref)
+      : widget.afterRender(ref);
   return new Node(node.tagName, node.attributes, children);
 }
 

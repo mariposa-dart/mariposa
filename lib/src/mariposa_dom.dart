@@ -5,6 +5,7 @@ import 'dart:js';
 import 'package:html_builder/html_builder.dart';
 import 'package:js/js.dart';
 import 'abstract_element.dart';
+import 'render_context.dart';
 import 'incremental_dom.dart' as idom;
 import 'widgets.dart';
 
@@ -29,21 +30,21 @@ void Function() render(Node Function() app, Element container) {
     });
   }
 
-  var fn = allowInterop(([n]) => _renderInner(app()));
+  var fn = allowInterop(([n]) => _renderInner(app(), new RenderContext(null)));
   var rerender = () => idom.patch(container, fn);
   rerender();
   return rerender;
 }
 
-void _renderInner(Node node) {
+void _renderInner(Node node, RenderContext context) {
   if (node is Widget) {
-    _renderWidget(node);
+    _renderWidget(node, context.createChild());
   } else {
-    _renderNode(node);
+    _renderNode(node, context.createChild());
   }
 }
 
-Element _renderNode(Node node) {
+Element _renderNode(Node node, RenderContext context) {
   if (node is TextNode) {
     idom.text(node.text);
     return null;
@@ -65,23 +66,27 @@ Element _renderNode(Node node) {
               node.attributes['key']?.toString() ??
               '',
           attrs);
-      for (var c in node.children) _renderInner(c);
+      for (var c in node.children) _renderInner(c, context.createChild());
 
       return idom.elementClose(node.tagName);
     }
   }
 }
 
-void _renderWidget(Widget widget) {
-  var node = widget.render(); //state);
-  var target = _renderNode(node); //, state);
+void _renderWidget(Widget widget, RenderContext context) {
+  var node = widget is ContextAwareWidget
+      ? widget.contextAwareRender(context)
+      : widget.render(); //state);
+  var target = _renderNode(node, context); //, state);
 
   if (!_elements.containsKey(target)) {
     //if (!_refs.any((d) => d.$el == target)) {
     var ref = new _DomElementImpl(target);
     ref._onDestroy = () => widget.beforeDestroy(ref);
     //_refs.add(ref);
-    widget.afterRender(ref); //, state);
+    widget is ContextAwareWidget
+        ? widget.contextAwareAfterRender(context, ref)
+        : widget.afterRender(ref); //, state);
   }
   //}
 }
@@ -141,8 +146,7 @@ class _DomElementImpl implements AbstractElement<Event, Element> {
   }
 
   @override
-  StreamSubscription<T> listen<T>(
-      String eventName, void callback(T event)) {
+  StreamSubscription<T> listen<T>(String eventName, void callback(T event)) {
     var list = _listeners.putIfAbsent(eventName, () => []);
     var sub = nativeElement.on[eventName].cast<T>().listen(callback);
     list.add(sub);

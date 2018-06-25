@@ -10,7 +10,7 @@ main() async {
   await for (var request in server) {
     var html = mariposa.render(myApp);
     request.response
-      ..headers.contentType = ContentType.html
+      ..headers.set('content-type', 'text/html')
       ..write(html)
       ..close();
   }
