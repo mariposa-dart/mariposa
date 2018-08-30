@@ -17,7 +17,7 @@ final Map<html.Node, List<_DomElementImpl>> _elements = {};
 void Function(NodeList) _nodesRemoved;
 
 /// Returns a one-off function that can be called to check for updates and render the tree.
-void Function() render(Node Function() app, Element container,
+void Function() render(Node  app, Element container,
     {Reflector reflector: const EmptyReflector()}) {
   if (_nodesRemoved == null) {
     _nodesRemoved =
@@ -36,9 +36,11 @@ void Function() render(Node Function() app, Element container,
   }
 
   var ctx = new RenderContextImpl(reflector);
-  var fn = allowInterop(([n]) => _renderInner(app(), ctx));
+  print(ctx.hashCode);
+  var fn = allowInterop(([n]) => _renderInner(app, ctx, true));
 
   void rerender() {
+    ctx.onCallback = null;
     idom.patch(container, fn);
 
     if (ctx.tasks.isNotEmpty) {
@@ -48,17 +50,23 @@ void Function() render(Node Function() app, Element container,
 
       rerender();
     }
+
+    ctx.onCallback = (callback) {
+      callback(ctx);
+      rerender();
+    };
   }
 
   rerender();
   return rerender;
 }
 
-void _renderInner(Node node, RenderContextImpl context) {
+void _renderInner(Node node, RenderContextImpl context, bool asRoot) {
+  var ctx = asRoot ? context : _getRenderContext(node, context);
   if (node is Widget) {
-    _renderWidget(node, _getRenderContext(node, context));
+    _renderWidget(node, ctx);
   } else {
-    _renderNode(node, _getRenderContext(node, context));
+    _renderNode(node, ctx);
   }
 }
 
@@ -104,7 +112,7 @@ Element _renderNode(Node node, RenderContextImpl context) {
               '',
           attrs);
       for (var c in node.children)
-        _renderInner(c, _getRenderContext(c, context));
+        _renderInner(c, _getRenderContext(c, context), false);
 
       return idom.elementClose(node.tagName);
     }

@@ -4,6 +4,7 @@ import 'render_context.dart';
 import 'stateful_widget.dart';
 
 class RenderContextImpl implements RenderContext {
+  void Function(void Function(RenderContext)) onCallback;
   Map<StatefulWidget, State> states;
   final Queue<void Function(RenderContext)> tasks = new Queue();
   Container _container;
@@ -29,7 +30,11 @@ class RenderContextImpl implements RenderContext {
   @override
   void enqueue(void Function(RenderContext) callback) {
     if (_parent == null) {
-      tasks.addLast(callback);
+      if (onCallback != null) {
+        onCallback(callback);
+      } else {
+        tasks.addLast(callback);
+      }
     } else {
       _parent.enqueue(callback);
     }

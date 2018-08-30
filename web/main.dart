@@ -5,12 +5,7 @@ import 'package:mariposa/mariposa.dart';
 import 'package:mariposa/dom.dart' as mariposa;
 
 void main() {
-  // Create a shorthand function to render our application UI.
-  var counterApp = () => CounterApp();
-
-  // Rendering our tree for the first time produces a
-  // helper function that we can call whenever we need to refresh the display.
-  mariposa.render(counterApp, querySelector('#app'));
+  mariposa.render(CounterApp(), querySelector('#app'));
 }
 
 class CounterApp extends StatefulWidget {
