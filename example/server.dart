@@ -39,7 +39,7 @@ class MyApp extends Widget {
             Heading.h1(
               child: TextNode('Hello, Mariposa!'),
             ),
-            Text.i('Server-side rendering is easy!'),
+            Text.italicized('Server-side rendering is easy!'),
           ],
         ),
       ],

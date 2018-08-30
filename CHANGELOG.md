@@ -1,6 +1,9 @@
 # 1.1.0-alpha.3
 * Added auto-generated `Style` class.
 * Added `HtmlWidget` base class, which is the basis of widgets like `Div`, `Button`, etc.
+* Corrected `StatefulWidget` infrastructure.
+* Add a unique stamp ID to each created node - this will be useful for re-hydrating SSR output.
+* Rendering now takes a `Node`, rather than a `Node Function()`.
 
 # 1.1.0-alpha.2
 * Fixed a bug `null` return nodes crashed DOM applications.

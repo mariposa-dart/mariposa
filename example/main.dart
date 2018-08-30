@@ -19,6 +19,6 @@ class Greeting extends Widget {
 
   @override
   Node render() {
-    return Text.b(message);
+    return Text.bold(message);
   }
 }

@@ -51,7 +51,7 @@ class _CounterAppState extends State<CounterApp> {
             (i) {
               return LI(
                 children: [
-                  Text.i('#$i'),
+                  Text.italicized('#$i'),
                 ],
               );
             },
