@@ -73,11 +73,9 @@ String _getStampKey(Node node) {
 RenderContextImpl _getRenderContext(Node node, RenderContextImpl parent) {
   if (node.attributes.containsKey(mariposaStampKey)) {
     var key = node.attributes[mariposaStampKey].toString();
-    print('Existing $key');
     return _renderContexts.putIfAbsent(key, () => parent.createChild());
   } else {
     var key = node.attributes[mariposaStampKey] = '${_idCount++}';
-    print('New $key');
     return _renderContexts.putIfAbsent(key, () => parent.createChild());
   }
 }
