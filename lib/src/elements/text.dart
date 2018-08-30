@@ -174,3 +174,14 @@ class Heading extends HtmlWidget {
         'h6', id, className, style, props, eventListeners, child);
   }
 }
+
+class Title extends HtmlWidget {
+  Title(
+      {String id,
+      className,
+      Style style,
+      Map<String, dynamic> props,
+      Map<String, void Function(Object)> eventListeners,
+      @required Node child})
+      : super('title', id, className, style, props, eventListeners, [child]);
+}

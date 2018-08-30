@@ -8,13 +8,13 @@ import 'render_context_impl.dart';
 import 'widgets.dart';
 
 /// Renders a tree into a [String].
-String render(Node Function() app,
+String render(Node app,
     {StringRenderer Function() createRenderer,
     Reflector reflector: const EmptyReflector()}) {
   createRenderer ??= () => new StringRenderer();
   var renderer = createRenderer();
   var noOpStreamCtrl = new StreamController.broadcast();
-  var out = _renderInner(app(), renderer, null, noOpStreamCtrl.stream,
+  var out = _renderInner(app, renderer, null, noOpStreamCtrl.stream,
       new RenderContextImpl(reflector));
   var result = renderer.render(out);
   noOpStreamCtrl.close();

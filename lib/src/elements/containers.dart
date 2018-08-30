@@ -23,6 +23,17 @@ class Aside extends HtmlWidget {
       : super('aside', id, className, style, props, eventListeners, children);
 }
 
+class Body extends HtmlWidget {
+  Body(
+      {String id,
+      className,
+      Style style,
+      Map<String, dynamic> props,
+      Map<String, void Function(Object)> eventListeners,
+      Iterable<Node> children})
+      : super('body', id, className, style, props, eventListeners, children);
+}
+
 class BR extends HtmlWidget {
   BR(
       {String id,
@@ -44,6 +55,17 @@ class Div extends HtmlWidget {
       : super('div', id, className, style, props, eventListeners, children);
 }
 
+class Head extends HtmlWidget {
+  Head(
+      {String id,
+      className,
+      Style style,
+      Map<String, dynamic> props,
+      Map<String, void Function(Object)> eventListeners,
+      Iterable<Node> children})
+      : super('head', id, className, style, props, eventListeners, children);
+}
+
 class Header extends HtmlWidget {
   Header(
       {String id,
@@ -63,6 +85,24 @@ class HR extends HtmlWidget {
       Map<String, dynamic> props,
       Map<String, void Function(Object)> eventListeners})
       : super('hr', id, className, style, props, eventListeners, [], true);
+}
+
+class Html extends HtmlWidget {
+  Html(
+      {String id,
+      className,
+      Style style,
+      Map<String, dynamic> props,
+      Map<String, void Function(Object)> eventListeners,
+      Iterable<Node> children,
+      String manifest,
+      String xmlns,
+      String lang})
+      : super('html', id, className, style, props, eventListeners, children) {
+    this.props['manifest'] ??= manifest;
+    this.props['xmlns'] ??= xmlns;
+    this.props['lang'] ??= lang;
+  }
 }
 
 class Footer extends HtmlWidget {
@@ -96,6 +136,27 @@ class Main extends HtmlWidget {
       Map<String, void Function(Object)> eventListeners,
       Iterable<Node> children})
       : super('main', id, className, style, props, eventListeners, children);
+}
+
+class Meta extends HtmlWidget {
+  Meta(
+      {String id,
+      className,
+      Style style,
+      Map<String, dynamic> props,
+      Map<String, void Function(Object)> eventListeners,
+      Iterable<Node> children,
+      String charset,
+      String content,
+      String httpEquiv,
+      String name})
+      : super('meta', id, className, style, props, eventListeners, children,
+            true) {
+    this.props['charset'] ??= charset;
+    this.props['content'] ??= content;
+    this.props['http-equiv'] ??= httpEquiv;
+    this.props['name'] ??= name;
+  }
 }
 
 class Nav extends HtmlWidget {
