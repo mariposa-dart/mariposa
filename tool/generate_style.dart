@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:io';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
@@ -18,7 +19,7 @@ main() async {
       sourceUrl: propertyListHtmlPath);
 
   // Extract the names of all possible properties.
-  var properties = <String>[];
+  var properties = new SplayTreeSet<String>();
   //var descriptions = <String, String>{};
   var recases = <String, ReCase>{};
   var links = doc.getElementsByTagName('a');
@@ -57,70 +58,68 @@ main() async {
               '/// Corresponds to the CSS property `$property`.',
             ]);
         }));
-
-        // Next, create a CONST constructor that initializes each property.
-        b.constructors.add(new Constructor((b) {
-          b.constant = true;
-
-          for (var property in properties) {
-            b.optionalParameters.add(new Parameter((b) {
-              b
-                ..named = true
-                ..name = recases[property].camelCase
-                ..toThis = true;
-            }));
-          }
-        }));
-
-        // Next, create a `copyWith` method that can mutate styles.
-        b.methods.add(new Method((b) {
-          b
-            ..name = 'copyWith'
-            ..returns = refer('Style')
-            ..body = new Block((b) {
-              var named = <String, Expression>{};
-
-              for (var property in properties) {
-                var name = recases[property].camelCase;
-                named[name] =
-                    new CodeExpression(new Code('$name ?? this.$name'));
-              }
-
-              b.addExpression(refer('Style').newInstance([], named));
-            });
-
-          for (var property in properties) {
-            b.optionalParameters.add(new Parameter((b) {
-              b
-                ..named = true
-                ..name = recases[property].camelCase
-                ..type = refer('String');
-            }));
-          }
-        }));
-
-        // Finally create a `compile` method.
-        b.methods.add(new Method((b) {
-          var values = <Expression, Expression>{};
-
-          for (var property in properties) {
-            values[literalString(property)] =
-                refer(recases[property].camelCase);
-          }
-
-          b
-            ..name = 'compile'
-            ..returns = new TypeReference((b) {
-              b
-                ..symbol = 'Map'
-                ..types.addAll([
-                  refer('String'),
-                  refer('String'),
-                ]);
-            })
-            ..body = literalMap(values).returned.statement;
-        }));
       }
+
+      // Next, create a CONST constructor that initializes each property.
+      b.constructors.add(new Constructor((b) {
+        b.constant = true;
+
+        for (var property in properties) {
+          b.optionalParameters.add(new Parameter((b) {
+            b
+              ..named = true
+              ..name = recases[property].camelCase
+              ..toThis = true;
+          }));
+        }
+      }));
+
+      // Next, create a `copyWith` method that can mutate styles.
+      b.methods.add(new Method((b) {
+        b
+          ..name = 'copyWith'
+          ..returns = refer('Style')
+          ..body = new Block((b) {
+            var named = <String, Expression>{};
+
+            for (var property in properties) {
+              var name = recases[property].camelCase;
+              named[name] = new CodeExpression(new Code('$name ?? this.$name'));
+            }
+
+            b.addExpression(refer('Style').newInstance([], named));
+          });
+
+        for (var property in properties) {
+          b.optionalParameters.add(new Parameter((b) {
+            b
+              ..named = true
+              ..name = recases[property].camelCase
+              ..type = refer('String');
+          }));
+        }
+      }));
+
+      // Finally create a `compile` method.
+      b.methods.add(new Method((b) {
+        var values = <Expression, Expression>{};
+
+        for (var property in properties) {
+          values[literalString(property)] = refer(recases[property].camelCase);
+        }
+
+        b
+          ..name = 'compile'
+          ..returns = new TypeReference((b) {
+            b
+              ..symbol = 'Map'
+              ..types.addAll([
+                refer('String'),
+                refer('String'),
+              ]);
+          })
+          ..body = literalMap(values).returned.statement;
+      }));
     }));
   });
 
