@@ -30,7 +30,7 @@ class _TodoListState extends State<TodoList> {
         Heading.h1(
           child: TextNode('Hi!'),
         ),
-        Text.i('Hi!'),
+        Text.italicized('Hi!'),
       ],
     );
   }
