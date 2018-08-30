@@ -2,7 +2,7 @@
 Stupid-simple, low-level Web application library built with
 [Incremental DOM](https://github.com/google/incremental-dom)
 and `html_builder`.
-Somewhat comparable to React.
+Somewhat comparable to React; heavily reminiscent of Flutter.
 
 Mariposa offers *no state management*;
 this is by design. Handling state should be handled via
@@ -69,14 +69,65 @@ Passing state down a stateless tree can become ugly very quickly.
 However, Mariposa provides a class called `ContextAwareWidget`, which can interact
 with a `RenderContext`, a scoped state handled internally by Mariposa.
 
-The `Context` class has provisions for dependency injection, so you don't need *any* hacks
-to have fully independent, context-aware widgets:
+The `Context` class has provisions for dependency injection
+(using [`package:angel_container`](https://github.com/angel-dart/container)
+), so you don't need *any* hacks
+to have fully independent, context-aware widgets.
+
+The usage of `package:angel_container` also means that you can use the same dependency
+injection found in version 2 of the [Angel](https://angel-dart.github.io) framework.
 
 ```dart
 class MyWidget extends ContextAwareWidget {
   @override
   Node contextAwareRender(RenderContext ctx) {
     // Return something...
+  }
+}
+```
+
+### `StatefulWidget`
+Flutter users will immediately recognize this pattern, which is built on top of
+`ContextAwareWidget`:
+
+```dart
+import 'dart:async';
+import 'package:html_builder/elements.dart';
+import 'package:html_builder/html_builder.dart';
+import 'package:mariposa/mariposa.dart';
+
+class TodoList extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return new _TodoListState();
+  }
+}
+
+class _TodoListState extends State<TodoList> {
+  String message = 'Getting todos...';
+
+  @override
+  void initState() {
+    super.initState();
+    new Future.delayed(const Duration(seconds: 2)).then((_) {
+      setState(() {
+        message = 'Got todos!';
+      });
+    });
+  }
+
+  @override
+  Node render() {
+    return div(
+      c: [
+        h1(),
+        i(
+          c: [
+            text('Hi!'),
+          ],
+        ),
+      ],
+    );
   }
 }
 ```
