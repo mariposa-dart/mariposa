@@ -2,6 +2,7 @@
 * Added `StatefulWidget` and `State`.
 * `package:mariposa/mariposa.dart` now exports `package:html_builder`.
 * Use `package:angel_container` in `RenderContext`.
+* Depend on `package:meta`.
 
 # 1.0.1
 * Add `RenderContext` and `ContextAwareWidget`.
