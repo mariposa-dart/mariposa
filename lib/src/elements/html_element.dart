@@ -11,6 +11,7 @@ class HtmlWidget extends Widget {
   final String id;
   final dynamic className;
   final Style style;
+  final bool selfClosing;
   final List<StreamSubscription> _subscriptions = [];
 
   HtmlWidget(
@@ -20,7 +21,8 @@ class HtmlWidget extends Widget {
       this.style,
       Map<String, dynamic> props,
       Map<String, void Function(Object)> eventListeners,
-      Iterable<Node> children)
+      Iterable<Node> children,
+      [this.selfClosing = false])
       : super(tagName: tagName) {
     this.children.addAll(children ?? []);
     this.eventListeners.addAll(eventListeners ?? {});
@@ -45,6 +47,8 @@ class HtmlWidget extends Widget {
 
   @override
   Node render() {
-    return new Node(tagName, props, children);
+    return selfClosing
+        ? new SelfClosingNode(tagName, props)
+        : new Node(tagName, props, children);
   }
 }

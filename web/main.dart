@@ -57,29 +57,35 @@ class CounterApp extends Widget {
 
   @override
   Node render() {
-    return div(
-      c: [
+    return Div(
+      children: [
         h1(c: [
-          text('${state.clicks} click(s)'),
+          Text('${state.clicks} click(s)'),
         ]),
-        br(),
+        BR(),
         button(
           id: 'add',
           c: [
-            text('Add!'),
+            Text('Add!'),
           ],
         ),
         button(
           id: 'subtract',
           c: [
-            text('Subtract!'),
+            Text('Subtract!'),
           ],
         ),
-        br(),
-        ul(
-          c: new List.generate(
+        BR(),
+        UList(
+          children: new List.generate(
             state.clicks,
-            (i) => li(c: [text('#$i')]),
+            (i) {
+              return LI(
+                children: [
+                  Text.italicized('#$i'),
+                ],
+              );
+            },
           ),
         ),
       ],
