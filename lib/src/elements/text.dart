@@ -17,6 +17,13 @@ class Text extends HtmlWidget {
     return new Text._('b', text,
         id: id, className: className, style: style, props: props);
   }
+
+  factory Text.emphasized(String text,
+      {String id, className, Style style, Map<String, dynamic> props}) {
+    return new Text._('i', text,
+        id: id, className: className, style: style, props: props);
+  }
+
   factory Text.italicized(String text,
       {String id, className, Style style, Map<String, dynamic> props}) {
     return new Text._('i', text,
