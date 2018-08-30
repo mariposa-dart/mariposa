@@ -11,6 +11,8 @@ import 'render_context_impl.dart';
 import 'incremental_dom.dart' as idom;
 import 'widgets.dart';
 
+int _idCount = 0;
+final Map<String, RenderContextImpl> _renderContexts = {};
 final Map<html.Node, List<_DomElementImpl>> _elements = {};
 void Function(NodeList) _nodesRemoved;
 
@@ -54,9 +56,29 @@ void Function() render(Node Function() app, Element container,
 
 void _renderInner(Node node, RenderContextImpl context) {
   if (node is Widget) {
-    _renderWidget(node, context.createChild());
+    _renderWidget(node, _getRenderContext(node, context));
   } else {
-    _renderNode(node, context.createChild());
+    _renderNode(node, _getRenderContext(node, context));
+  }
+}
+
+String _getStampKey(Node node) {
+  if (node.attributes.containsKey(mariposaStampKey)) {
+    return node.attributes[mariposaStampKey].toString();
+  } else {
+    return node.attributes[mariposaStampKey] = '${_idCount++}';
+  }
+}
+
+RenderContextImpl _getRenderContext(Node node, RenderContextImpl parent) {
+  if (node.attributes.containsKey(mariposaStampKey)) {
+    var key = node.attributes[mariposaStampKey].toString();
+    print('Existing $key');
+    return _renderContexts.putIfAbsent(key, () => parent.createChild());
+  } else {
+    var key = node.attributes[mariposaStampKey] = '${_idCount++}';
+    print('New $key');
+    return _renderContexts.putIfAbsent(key, () => parent.createChild());
   }
 }
 
@@ -67,6 +89,7 @@ Element _renderNode(Node node, RenderContextImpl context) {
   } else if (node != null) {
     // TODO: Assign ID's?
     var attrs = _compileAttributes(node.attributes.cast());
+    attrs.addAll([mariposaStampKey, _getStampKey(node)]);
 
     if (node is SelfClosingNode) {
       return idom.elementVoid(
@@ -82,7 +105,8 @@ Element _renderNode(Node node, RenderContextImpl context) {
               node.attributes['key']?.toString() ??
               '',
           attrs);
-      for (var c in node.children) _renderInner(c, context.createChild());
+      for (var c in node.children)
+        _renderInner(c, _getRenderContext(c, context));
 
       return idom.elementClose(node.tagName);
     }

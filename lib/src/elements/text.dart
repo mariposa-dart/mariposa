@@ -10,7 +10,8 @@ class Text extends HtmlWidget {
       Style style,
       Map<String, dynamic> props,
       Map<String, void Function(Object)> eventListeners})
-      : super(tagName, id, className, style, props, eventListeners, []);
+      : super(tagName, id, className, style, props, eventListeners,
+            [new TextNode(text)]);
 
   factory Text(String text,
       {String id,

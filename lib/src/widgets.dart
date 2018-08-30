@@ -1,6 +1,8 @@
 import 'package:html_builder/html_builder.dart';
 import 'abstract_element.dart';
 
+const String mariposaStampKey = 'data-mariposa-stamp-key';
+
 /// A [Node] that can access the state of the DOM or virtual DOM tree.
 abstract class Widget extends Node {
   Widget({String tagName}) : super(tagName ?? 'div');
