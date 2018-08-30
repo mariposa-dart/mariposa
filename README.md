@@ -42,7 +42,7 @@ This is a super-small example of an application without state.
 See `web/main.dart` for an example of an application with state.
 Complex applications should consider `dart:async`, Redux, Flux,
 or some similar state management architecture to create manageable
-applications.
+applications. 
 
 ## Widgets
 *Note: Not the same as Flutter widgets*.
