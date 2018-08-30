@@ -27,7 +27,7 @@ class Text extends HtmlWidget {
         eventListeners: eventListeners);
   }
 
-  factory Text.b(String text,
+  factory Text.bold(String text,
       {String id,
       className,
       Style style,
@@ -41,7 +41,7 @@ class Text extends HtmlWidget {
         eventListeners: eventListeners);
   }
 
-  factory Text.em(String text,
+  factory Text.emphasized(String text,
       {String id,
       className,
       Style style,
@@ -55,7 +55,7 @@ class Text extends HtmlWidget {
         eventListeners: eventListeners);
   }
 
-  factory Text.i(String text,
+  factory Text.italicized(String text,
       {String id,
       className,
       Style style,
@@ -82,7 +82,7 @@ class Text extends HtmlWidget {
         props: props,
         eventListeners: eventListeners);
   }
-  factory Text.u(String text,
+  factory Text.underlined(String text,
       {String id,
       className,
       Style style,

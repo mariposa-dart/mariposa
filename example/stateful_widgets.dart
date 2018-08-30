@@ -25,14 +25,12 @@ class _TodoListState extends State<TodoList> {
 
   @override
   Node render() {
-    return div(
-      c: [
-        h1(),
-        i(
-          c: [
-            text('Hi!'),
-          ],
+    return Div(
+      children: [
+        Heading.h1(
+          child: TextNode('Hi!'),
         ),
+        Text.i('Hi!'),
       ],
     );
   }
