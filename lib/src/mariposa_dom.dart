@@ -93,7 +93,6 @@ Element _renderNode(Node node, RenderContextImpl context) {
     idom.text(node.text);
     return null;
   } else if (node != null) {
-    // TODO: Assign ID's?
     var attrs = _compileAttributes(node.attributes.cast());
     attrs.addAll([mariposaStampKey, _getStampKey(node)]);
 
