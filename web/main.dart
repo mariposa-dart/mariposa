@@ -5,6 +5,8 @@ import 'package:mariposa/mariposa.dart';
 import 'package:mariposa/dom.dart' as mariposa;
 
 void main() {
+  // Rendering our tree for the first time produces a
+  // helper function that we can call whenever we need to refresh the display.
   mariposa.render(CounterApp(), querySelector('#app'));
 }
 
@@ -38,7 +40,7 @@ class _CounterAppState extends State<CounterApp> {
           child: Text('Subtract!'),
           onClick: (_) {
             setState(() {
-              clicks--;
+              if (clicks > 0) clicks--;
             });
           },
         ),
