@@ -16,14 +16,14 @@ class RenderContextImpl implements RenderContext {
     container.registerSingleton<Map<StatefulWidget, State>>(states = {});
   }
 
-  RenderContextImpl._child(this._parent, Reflector reflector)
-      : _container = new Container(reflector);
+  RenderContextImpl._child(this._parent)
+      : _container = _parent.container.createChild();
 
   Container get container => _container;
 
   @override
-  RenderContextImpl createChild({Reflector reflector: const EmptyReflector()}) {
-    return new RenderContextImpl._child(this, reflector);
+  RenderContextImpl createChild() {
+    return new RenderContextImpl._child(this);
   }
 
   @override

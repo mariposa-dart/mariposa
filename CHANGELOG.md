@@ -1,3 +1,7 @@
+# 1.1.0-alpha.3
+* Added auto-generated `Style` class.
+* Added `HtmlWidget` base class, which is the basis of widgets like `Div`, `Button`, etc.
+
 # 1.1.0-alpha.2
 * Fixed a bug `null` return nodes crashed DOM applications.
 

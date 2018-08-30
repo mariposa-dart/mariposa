@@ -9,6 +9,9 @@ abstract class StatefulWidget extends ContextAwareWidget {
   State _createState(RenderContext context) {
     if (_state != null) {
       return _state;
+    } else if (!context.container.has<Map<StatefulWidget, State>>()) {
+      throw new StateError(
+          'The RenderContext has no Map<StatefulWidget, State> injected; StatefulWidget cannot be used.');
     } else {
       var states = context.container.make<Map<StatefulWidget, State>>();
       return _state = states.putIfAbsent(this, () {

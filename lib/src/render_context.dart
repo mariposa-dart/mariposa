@@ -9,7 +9,7 @@ abstract class RenderContext {
 
   /// Creates a child of this [RenderContext], optionally
   /// with a custom [reflector].
-  RenderContext createChild({Reflector reflector: const EmptyReflector()});
+  RenderContext createChild();
 
   /// Instructs Mariposa to run a [callback] after this render is complete.
   ///
