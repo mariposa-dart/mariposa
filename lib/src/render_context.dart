@@ -1,25 +1,21 @@
+import 'package:angel_container/angel_container.dart';
 import 'package:html_builder/html_builder.dart';
 import 'abstract_element.dart';
 import 'widgets.dart';
 
 /// The context in which a node or widget is being rendered.
-class RenderContext {
-  final RenderContext _parent;
+abstract class RenderContext {
+  Container get container;
 
-  final List _values = [];
+  /// Creates a child of this [RenderContext], optionally
+  /// with a custom [reflector].
+  RenderContext createChild({Reflector reflector: const EmptyReflector()});
 
-  RenderContext(this._parent);
-
-  RenderContext createChild() => new RenderContext(this);
-
-  /// Adds a value to this context's injections.
-  void inject(value) => _values.add(value);
-
-  /// Gets a value within this context, matched by [matcher].
-  T find<T>(bool Function(dynamic) matcher) {
-    return _values.firstWhere(matcher, orElse: () => _parent?.find<T>(matcher))
-        as T;
-  }
+  /// Instructs Mariposa to run a [callback] after this render is complete.
+  ///
+  /// Tasks trigger a re-render, so only enqueue them if you intend for an action to
+  /// update the UI.
+  void enqueue(void Function(RenderContext) callback);
 }
 
 /// A special [Widget] that can interact with a [RenderContext].

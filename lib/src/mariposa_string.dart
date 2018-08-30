@@ -1,24 +1,28 @@
 import 'dart:async';
+import 'package:angel_container/angel_container.dart';
 import 'package:html_builder/html_builder.dart';
 import 'package:zen/zen.dart';
 import 'abstract_element.dart';
 import 'render_context.dart';
+import 'render_context_impl.dart';
 import 'widgets.dart';
 
 /// Renders a tree into a [String].
-String render(Node Function() app, {StringRenderer Function() createRenderer}) {
+String render(Node Function() app,
+    {StringRenderer Function() createRenderer,
+    Reflector reflector: const EmptyReflector()}) {
   createRenderer ??= () => new StringRenderer();
   var renderer = createRenderer();
   var noOpStreamCtrl = new StreamController.broadcast();
-  var out = _renderInner(
-      app(), renderer, null, noOpStreamCtrl.stream, new RenderContext(null));
+  var out = _renderInner(app(), renderer, null, noOpStreamCtrl.stream,
+      new RenderContextImpl(reflector));
   var result = renderer.render(out);
   noOpStreamCtrl.close();
   return result;
 }
 
 Node _renderInner(Node node, StringRenderer renderer, _StringElementImpl parent,
-    Stream events, RenderContext context) {
+    Stream events, RenderContextImpl context) {
   if (node is Widget)
     node = _renderWidget(
         node as Widget, renderer, parent, events, context.createChild());
@@ -26,11 +30,11 @@ Node _renderInner(Node node, StringRenderer renderer, _StringElementImpl parent,
 }
 
 Node _renderNode(Node node, StringRenderer renderer, Stream events,
-        RenderContext context) =>
+        RenderContextImpl context) =>
     node;
 
 Node _renderWidget(Widget widget, StringRenderer renderer,
-    _StringElementImpl parent, Stream events, RenderContext context) {
+    _StringElementImpl parent, Stream events, RenderContextImpl context) {
   var children = <Node>[];
   var node = widget is ContextAwareWidget
       ? widget.contextAwareRender(context)
@@ -68,8 +72,7 @@ class _StringElementImpl implements AbstractElement<dynamic, Node> {
 
   @override
   Iterable<AbstractElement<dynamic, Node>> querySelectorAll(String selectors) {
-    return Zen
-        .querySelectorAll(nativeElement, selectors)
+    return Zen.querySelectorAll(nativeElement, selectors)
         .map((n) => new _StringElementImpl(n, this, events));
   }
 

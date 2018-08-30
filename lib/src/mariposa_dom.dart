@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:html' hide Node;
 import 'dart:html' as html show Node;
 import 'dart:js';
+import 'package:angel_container/angel_container.dart';
 import 'package:html_builder/html_builder.dart';
 import 'package:js/js.dart';
 import 'abstract_element.dart';
 import 'render_context.dart';
+import 'render_context_impl.dart';
 import 'incremental_dom.dart' as idom;
 import 'widgets.dart';
 
@@ -13,7 +15,8 @@ final Map<html.Node, List<_DomElementImpl>> _elements = {};
 void Function(NodeList) _nodesRemoved;
 
 /// Returns a one-off function that can be called to check for updates and render the tree.
-void Function() render(Node Function() app, Element container) {
+void Function() render(Node Function() app, Element container,
+    {Reflector reflector: const EmptyReflector()}) {
   if (_nodesRemoved == null) {
     _nodesRemoved =
         idom.notifications.nodesDeleted = allowInterop((NodeList list) {
@@ -30,13 +33,26 @@ void Function() render(Node Function() app, Element container) {
     });
   }
 
-  var fn = allowInterop(([n]) => _renderInner(app(), new RenderContext(null)));
-  var rerender = () => idom.patch(container, fn);
+  var ctx = new RenderContextImpl(reflector);
+  var fn = allowInterop(([n]) => _renderInner(app(), ctx));
+
+  void rerender() {
+    idom.patch(container, fn);
+
+    if (ctx.tasks.isNotEmpty) {
+      while (ctx.tasks.isNotEmpty) {
+        ctx.tasks.removeFirst()(ctx);
+      }
+
+      rerender();
+    }
+  }
+
   rerender();
   return rerender;
 }
 
-void _renderInner(Node node, RenderContext context) {
+void _renderInner(Node node, RenderContextImpl context) {
   if (node is Widget) {
     _renderWidget(node, context.createChild());
   } else {
@@ -44,7 +60,7 @@ void _renderInner(Node node, RenderContext context) {
   }
 }
 
-Element _renderNode(Node node, RenderContext context) {
+Element _renderNode(Node node, RenderContextImpl context) {
   if (node is TextNode) {
     idom.text(node.text);
     return null;
@@ -73,7 +89,7 @@ Element _renderNode(Node node, RenderContext context) {
   }
 }
 
-void _renderWidget(Widget widget, RenderContext context) {
+void _renderWidget(Widget widget, RenderContextImpl context) {
   var node = widget is ContextAwareWidget
       ? widget.contextAwareRender(context)
       : widget.render(); //state);
