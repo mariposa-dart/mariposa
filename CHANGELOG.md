@@ -1,3 +1,6 @@
+# 1.1.0-alpha.1
+* Fixed a bug where Lists were being joined with a comma; now they are joined by a single space.
+
 # 1.1.0-alpha
 * Added `StatefulWidget` and `State`.
 * `package:mariposa/mariposa.dart` now exports `package:html_builder`.

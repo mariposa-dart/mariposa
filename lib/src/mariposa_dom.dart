@@ -122,7 +122,7 @@ List _compileAttributes(Map props) {
     else if (v == true)
       out.add(k);
     else if (v is List)
-      out.add(v.join(', '));
+      out.add(v.join(' '));
     else if (v is Map) {
       int i = 0;
       var b = v.keys.fold<StringBuffer>(new StringBuffer(), (out, k) {
