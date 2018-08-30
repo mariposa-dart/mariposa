@@ -1,3 +1,6 @@
+# 1.1.0-alpha.2
+* Fixed a bug `null` return nodes crashed DOM applications.
+
 # 1.1.0-alpha.1
 * Fixed a bug where Lists were being joined with a comma; now they are joined by a single space.
 

@@ -64,7 +64,7 @@ Element _renderNode(Node node, RenderContextImpl context) {
   if (node is TextNode) {
     idom.text(node.text);
     return null;
-  } else {
+  } else if (node != null) {
     // TODO: Assign ID's?
     var attrs = _compileAttributes(node.attributes.cast());
 
@@ -86,25 +86,30 @@ Element _renderNode(Node node, RenderContextImpl context) {
 
       return idom.elementClose(node.tagName);
     }
+  } else {
+    return null;
   }
 }
 
 void _renderWidget(Widget widget, RenderContextImpl context) {
   var node = widget is ContextAwareWidget
       ? widget.contextAwareRender(context)
-      : widget.render(); //state);
-  var target = _renderNode(node, context); //, state);
+      : widget?.render(); //state);
 
-  if (!_elements.containsKey(target)) {
-    //if (!_refs.any((d) => d.$el == target)) {
-    var ref = new _DomElementImpl(target);
-    ref._onDestroy = () => widget.beforeDestroy(ref);
-    //_refs.add(ref);
-    widget is ContextAwareWidget
-        ? widget.contextAwareAfterRender(context, ref)
-        : widget.afterRender(ref); //, state);
+  if (node != null) {
+    var target = _renderNode(node, context); //, state);
+
+    if (!_elements.containsKey(target)) {
+      //if (!_refs.any((d) => d.$el == target)) {
+      var ref = new _DomElementImpl(target);
+      ref._onDestroy = () => widget.beforeDestroy(ref);
+      //_refs.add(ref);
+      widget is ContextAwareWidget
+          ? widget.contextAwareAfterRender(context, ref)
+          : widget.afterRender(ref); //, state);
+    }
+    //}
   }
-  //}
 }
 
 List _compileAttributes(Map props) {
