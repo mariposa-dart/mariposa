@@ -22,20 +22,27 @@ main() async {
 class MyApp extends Widget {
   @override
   Node render() {
-    return Html(lang: 'en', children: [
-      Head(children: [
-        Meta(
-          name: 'viewport',
-          content: 'width=device-width, initial-scale=1',
+    return Html(
+      lang: 'en',
+      children: [
+        Head(children: [
+          Meta(
+            name: 'viewport',
+            content: 'width=device-width, initial-scale=1',
+          ),
+          Title(
+            child: TextNode('Hello, Mariposa!'),
+          ),
+        ]),
+        Body(
+          children: [
+            Heading.h1(
+              child: TextNode('Hello, Mariposa!'),
+            ),
+            Text.i('Server-side rendering is easy!'),
+          ],
         ),
-        Title(child: TextNode('Hello, Mariposa!')),
-      ]),
-      Body(children: [
-        Heading.h1(
-          child: TextNode('Hello, Mariposa!'),
-        ),
-        Text.i('Server-side rendering is easy!'),
-      ]),
-    ]);
+      ],
+    );
   }
 }
