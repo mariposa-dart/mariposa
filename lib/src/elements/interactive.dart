@@ -53,7 +53,7 @@ class Button extends HtmlWidget {
         style: style,
         props: props,
         eventListeners: eventListeners,
-        children: [child],
+        children: [icon, child],
         onClick: onClick,
         onDoubleClick: onDoubleClick);
   }
