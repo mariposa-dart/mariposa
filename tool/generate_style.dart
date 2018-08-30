@@ -20,6 +20,16 @@ main() async {
 
   // Extract the names of all possible properties.
   var properties = new SplayTreeSet<String>();
+  properties.addAll([
+    'animation',
+    'animation-duration',
+    'animation-name',
+    'animation-timing-function',
+    'animation-delay',
+    'animation-iteration-count',
+    'animation-direction',
+    'animation-fill-mode'
+  ]);
   //var descriptions = <String, String>{};
   var recases = <String, ReCase>{};
   var links = doc.getElementsByTagName('a');
@@ -31,8 +41,11 @@ main() async {
       properties.add(link.text);
       //descriptions.putIfAbsent(
       //    link.text, () => link.parent.parent.children[1].text);
-      recases.putIfAbsent(link.text, () => new ReCase(link.text));
     }
+  }
+
+  for (var property in properties) {
+    recases.putIfAbsent(property, () => new ReCase(property));
   }
 
   var lib = new Library((b) {

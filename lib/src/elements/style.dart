@@ -3,7 +3,15 @@
 /// AUTO-GENERATED. DO NOT MODIFY BY HAND.
 class Style {
   const Style(
-      {this.backgroundAttachment,
+      {this.animation,
+      this.animationDelay,
+      this.animationDirection,
+      this.animationDuration,
+      this.animationFillMode,
+      this.animationIterationCount,
+      this.animationName,
+      this.animationTimingFunction,
+      this.backgroundAttachment,
       this.backgroundBlendMode,
       this.backgroundColor,
       this.backgroundImage,
@@ -116,6 +124,30 @@ class Style {
       this.width,
       this.wordSpacing,
       this.zIndex});
+
+  /// Corresponds to the CSS property `animation`.
+  final String animation;
+
+  /// Corresponds to the CSS property `animation-delay`.
+  final String animationDelay;
+
+  /// Corresponds to the CSS property `animation-direction`.
+  final String animationDirection;
+
+  /// Corresponds to the CSS property `animation-duration`.
+  final String animationDuration;
+
+  /// Corresponds to the CSS property `animation-fill-mode`.
+  final String animationFillMode;
+
+  /// Corresponds to the CSS property `animation-iteration-count`.
+  final String animationIterationCount;
+
+  /// Corresponds to the CSS property `animation-name`.
+  final String animationName;
+
+  /// Corresponds to the CSS property `animation-timing-function`.
+  final String animationTimingFunction;
 
   /// Corresponds to the CSS property `background-attachment`.
   final String backgroundAttachment;
@@ -457,7 +489,15 @@ class Style {
   final String zIndex;
 
   Style copyWith(
-      {String backgroundAttachment,
+      {String animation,
+      String animationDelay,
+      String animationDirection,
+      String animationDuration,
+      String animationFillMode,
+      String animationIterationCount,
+      String animationName,
+      String animationTimingFunction,
+      String backgroundAttachment,
       String backgroundBlendMode,
       String backgroundColor,
       String backgroundImage,
@@ -571,6 +611,16 @@ class Style {
       String wordSpacing,
       String zIndex}) {
     return new Style(
+        animation: animation ?? this.animation,
+        animationDelay: animationDelay ?? this.animationDelay,
+        animationDirection: animationDirection ?? this.animationDirection,
+        animationDuration: animationDuration ?? this.animationDuration,
+        animationFillMode: animationFillMode ?? this.animationFillMode,
+        animationIterationCount:
+            animationIterationCount ?? this.animationIterationCount,
+        animationName: animationName ?? this.animationName,
+        animationTimingFunction:
+            animationTimingFunction ?? this.animationTimingFunction,
         backgroundAttachment: backgroundAttachment ?? this.backgroundAttachment,
         backgroundBlendMode: backgroundBlendMode ?? this.backgroundBlendMode,
         backgroundColor: backgroundColor ?? this.backgroundColor,
@@ -688,6 +738,14 @@ class Style {
 
   Map<String, String> compile() {
     return {
+      'animation': animation,
+      'animation-delay': animationDelay,
+      'animation-direction': animationDirection,
+      'animation-duration': animationDuration,
+      'animation-fill-mode': animationFillMode,
+      'animation-iteration-count': animationIterationCount,
+      'animation-name': animationName,
+      'animation-timing-function': animationTimingFunction,
       'background-attachment': backgroundAttachment,
       'background-blend-mode': backgroundBlendMode,
       'background-color': backgroundColor,
