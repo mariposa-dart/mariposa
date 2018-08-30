@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:html' show querySelector;
 import 'package:html_builder/html_builder.dart';
 import 'package:html_builder/elements.dart';
