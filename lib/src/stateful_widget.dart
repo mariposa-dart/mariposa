@@ -14,13 +14,19 @@ abstract class StatefulWidget extends ContextAwareWidget {
           'The RenderContext has no Map<StatefulWidget, State> injected; StatefulWidget cannot be used.');
     } else {
       var states = context.container.make<Map<StatefulWidget, State>>();
-      return _state = states.putIfAbsent(this, () {
+       _state = states.putIfAbsent(this, () {
         var state = createState();
-        state
+        return state
           .._renderContext = context
           .._widget = this
           ..initState();
       });
+
+      if (_state == null) {
+        throw new StateError('A call createState() on $runtimeType returned null.');
+      }
+
+      return _state;
     }
   }
 
