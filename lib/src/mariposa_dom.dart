@@ -17,7 +17,7 @@ final Map<html.Node, List<_DomElementImpl>> _elements = {};
 void Function(NodeList) _nodesRemoved;
 
 /// Returns a one-off function that can be called to check for updates and render the tree.
-void Function() render(Node  app, Element container,
+void Function() render(Node app, Element container,
     {Reflector reflector: const EmptyReflector()}) {
   if (_nodesRemoved == null) {
     _nodesRemoved =

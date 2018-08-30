@@ -14,7 +14,7 @@ abstract class StatefulWidget extends ContextAwareWidget {
           'The RenderContext has no Map<StatefulWidget, State> injected; StatefulWidget cannot be used.');
     } else {
       var states = context.container.make<Map<StatefulWidget, State>>();
-       _state = states.putIfAbsent(this, () {
+      _state = states.putIfAbsent(this, () {
         var state = createState();
         return state
           .._renderContext = context
@@ -23,7 +23,8 @@ abstract class StatefulWidget extends ContextAwareWidget {
       });
 
       if (_state == null) {
-        throw new StateError('A call createState() on $runtimeType returned null.');
+        throw new StateError(
+            'A call createState() on $runtimeType returned null.');
       }
 
       return _state;
