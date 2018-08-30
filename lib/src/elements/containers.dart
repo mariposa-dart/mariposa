@@ -12,6 +12,17 @@ class Article extends HtmlWidget {
       : super('article', id, className, style, props, eventListeners, children);
 }
 
+class Aside extends HtmlWidget {
+  Aside(
+      {String id,
+      className,
+      Style style,
+      Map<String, dynamic> props,
+      Map<String, void Function(Object)> eventListeners,
+      Iterable<Node> children})
+      : super('aside', id, className, style, props, eventListeners, children);
+}
+
 class BR extends HtmlWidget {
   BR(
       {String id,
@@ -74,6 +85,28 @@ class LI extends HtmlWidget {
       Map<String, void Function(Object)> eventListeners,
       Iterable<Node> children})
       : super('li', id, className, style, props, eventListeners, children);
+}
+
+class Main extends HtmlWidget {
+  Main(
+      {String id,
+      className,
+      Style style,
+      Map<String, dynamic> props,
+      Map<String, void Function(Object)> eventListeners,
+      Iterable<Node> children})
+      : super('main', id, className, style, props, eventListeners, children);
+}
+
+class Nav extends HtmlWidget {
+  Nav(
+      {String id,
+      className,
+      Style style,
+      Map<String, dynamic> props,
+      Map<String, void Function(Object)> eventListeners,
+      Iterable<Node> children})
+      : super('nav', id, className, style, props, eventListeners, children);
 }
 
 class OList extends HtmlWidget {

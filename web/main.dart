@@ -37,52 +37,37 @@ class AppState {
 class CounterApp extends Widget {
   final AppState state;
   final StreamController<int> onClick;
-  StreamSubscription _addSubscription, _subtractSubscription;
 
   CounterApp({this.state, this.onClick});
-
-  @override
-  void afterRender(AbstractElement element) {
-    var add = element.querySelector('#add'),
-        subtract = element.querySelector('#subtract');
-    _addSubscription = add.listen('click', (_) => onClick.add(1));
-    _subtractSubscription = subtract.listen('click', (_) => onClick.add(-1));
-  }
-
-  @override
-  void beforeDestroy(AbstractElement element) {
-    _addSubscription.cancel();
-    _subtractSubscription.cancel();
-  }
 
   @override
   Node render() {
     return Div(
       children: [
-        h1(c: [
-          Text('${state.clicks} click(s)'),
-        ]),
-        BR(),
-        button(
-          id: 'add',
-          c: [
-            Text('Add!'),
-          ],
+        Heading.h1(
+          child: Text('${state.clicks} click(s)'),
         ),
-        button(
-          id: 'subtract',
-          c: [
-            Text('Subtract!'),
-          ],
+        BR(),
+        Button(
+          child: Text('Add!'),
+          onClick: (_) {
+            onClick.add(1);
+          },
+        ),
+        Button(
+          child: Text('Subtract!'),
+          onClick: (_) {
+            onClick.add(-1);
+          },
         ),
         BR(),
         UList(
-          children: new List.generate(
+          children: List.generate(
             state.clicks,
             (i) {
               return LI(
                 children: [
-                  Text.italicized('#$i'),
+                  Text.i('#$i'),
                 ],
               );
             },
