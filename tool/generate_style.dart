@@ -87,7 +87,7 @@ main() async {
               named[name] = new CodeExpression(new Code('$name ?? this.$name'));
             }
 
-            b.addExpression(refer('Style').newInstance([], named));
+            b.addExpression(refer('Style').newInstance([], named).returned);
           });
 
         for (var property in properties) {

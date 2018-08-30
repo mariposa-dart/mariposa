@@ -570,7 +570,7 @@ class Style {
       String width,
       String wordSpacing,
       String zIndex}) {
-    new Style(
+    return new Style(
         backgroundAttachment: backgroundAttachment ?? this.backgroundAttachment,
         backgroundBlendMode: backgroundBlendMode ?? this.backgroundBlendMode,
         backgroundColor: backgroundColor ?? this.backgroundColor,
