@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:collection';
-import 'package:html/dom.dart';
 import 'package:mariposa/mariposa.dart' show IncrementalDom, mariposaKey;
+import 'package:universal_html/html.dart';
 
-class InMemoryIncrementalDom extends IncrementalDom<Node, Element> {
+class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
   final StreamController<Node> _onNodeCreated = StreamController(),
       _onNodeDeleted = StreamController();
   final Queue<Element> _elementStack = Queue();

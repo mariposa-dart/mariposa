@@ -1,19 +1,19 @@
 import 'dart:async';
-import 'dart:html';
+import 'dart:html' as html;
 import 'package:mariposa/mariposa.dart';
 import 'js_incremental_dom.dart' as js_idom;
 
-class BrowserIncrementalDom extends IncrementalDom<Node, Element> {
-  final StreamController<Node> _onNodeCreated = StreamController(),
+class BrowserIncrementalDom extends IncrementalDom<html.Node, html.Element> {
+  final StreamController<html.Node> _onNodeCreated = StreamController(),
       _onNodeDeleted = StreamController();
 
-  void Function(NodeList) _oldNodesCreated, _oldNodesDeleted;
+  void Function(html.NodeList) _oldNodesCreated, _oldNodesDeleted;
 
   @override
-  Stream<Node> get onNodeCreated => _onNodeCreated.stream;
+  Stream<html.Node> get onNodeCreated => _onNodeCreated.stream;
 
   @override
-  Stream<Node> get onNodeDeleted => _onNodeDeleted.stream;
+  Stream<html.Node> get onNodeDeleted => _onNodeDeleted.stream;
 
   BrowserIncrementalDom() {
     _oldNodesCreated = js_idom.notifications.nodesCreated;
@@ -41,7 +41,7 @@ class BrowserIncrementalDom extends IncrementalDom<Node, Element> {
   }
 
   @override
-  Element elementClose(String tagName) => js_idom.elementClose(tagName);
+  html.Element elementClose(String tagName) => js_idom.elementClose(tagName);
 
   @override
   void elementOpen(
@@ -49,14 +49,14 @@ class BrowserIncrementalDom extends IncrementalDom<Node, Element> {
       js_idom.elementOpen(tagName, id, listifyAttributes(attributes));
 
   @override
-  Element elementVoid(
+  html.Element elementVoid(
           String tagName, String id, Map<String, dynamic> attributes) =>
       js_idom.elementVoid(tagName, id, listifyAttributes(attributes));
 
   @override
-  void patch(Element element, void Function() callback) =>
+  void patch(html.Element element, void Function() callback) =>
       js_idom.patch(element, callback);
 
   @override
-  Text text(String text) => js_idom.text(text);
+  html.Text text(String text) => js_idom.text(text);
 }
