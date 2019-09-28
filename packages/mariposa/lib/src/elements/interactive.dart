@@ -5,7 +5,8 @@ import 'html_element.dart';
 
 class Button extends BaseHtmlComponent {
   Button._(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
@@ -13,13 +14,15 @@ class Button extends BaseHtmlComponent {
       Iterable<Node> children,
       void Function(Event) onClick,
       void Function(Event) onDoubleClick})
-      : super('button', id, className, style, props, eventListeners, children) {
+      : super(key, 'button', id, className, style, props, eventListeners,
+            children) {
     this.eventListeners['click'] ??= onClick;
     this.eventListeners['dblclick'] ??= onDoubleClick;
   }
 
   factory Button(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
@@ -29,6 +32,7 @@ class Button extends BaseHtmlComponent {
       void Function(Event) onDoubleClick}) {
     return Button._(
         id: id,
+        key: key,
         className: className,
         style: style,
         props: props,
@@ -39,7 +43,8 @@ class Button extends BaseHtmlComponent {
   }
 
   factory Button.icon(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
@@ -50,6 +55,7 @@ class Button extends BaseHtmlComponent {
       void Function(Event) onDoubleClick}) {
     return Button._(
         id: id,
+        key: key,
         className: className,
         style: style,
         props: props,

@@ -30,6 +30,8 @@ class TimerApp extends ComponentClass {
 
   @override
   Node render() {
+    return Div(children: []);
+
     return div(c: [
       h1(c: [text('Mariposa Demo')]),
       p(c: [

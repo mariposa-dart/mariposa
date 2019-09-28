@@ -4,93 +4,108 @@ import 'html_element.dart';
 
 class Article extends BaseHtmlComponent {
   Article(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super('article', id, className, style, props, eventListeners, children);
+      : super(key, 'article', id, className, style, props, eventListeners,
+            children);
 }
 
 class Aside extends BaseHtmlComponent {
   Aside(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super('aside', id, className, style, props, eventListeners, children);
+      : super(key, 'aside', id, className, style, props, eventListeners,
+            children);
 }
 
 class Body extends BaseHtmlComponent {
   Body(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super('body', id, className, style, props, eventListeners, children);
+      : super(
+            key, 'body', id, className, style, props, eventListeners, children);
 }
 
 class BR extends BaseHtmlComponent {
   BR(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners})
-      : super('br', id, className, style, props, eventListeners, [], true);
+      : super(key, 'br', id, className, style, props, eventListeners, [], true);
 }
 
 class Div extends BaseHtmlComponent {
   Div(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super('div', id, className, style, props, eventListeners, children);
+      : super(
+            key, 'div', id, className, style, props, eventListeners, children);
 }
 
 class Head extends BaseHtmlComponent {
   Head(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super('head', id, className, style, props, eventListeners, children);
+      : super(
+            key, 'head', id, className, style, props, eventListeners, children);
 }
 
 class Header extends BaseHtmlComponent {
   Header(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super('header', id, className, style, props, eventListeners, children);
+      : super(key, 'header', id, className, style, props, eventListeners,
+            children);
 }
 
 class HR extends BaseHtmlComponent {
   HR(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners})
-      : super('hr', id, className, style, props, eventListeners, [], true);
+      : super(key, 'hr', id, className, style, props, eventListeners, [], true);
 }
 
 class Html extends BaseHtmlComponent {
   Html(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
@@ -99,7 +114,8 @@ class Html extends BaseHtmlComponent {
       String manifest,
       String xmlns,
       String lang})
-      : super('html', id, className, style, props, eventListeners, children) {
+      : super(key, 'html', id, className, style, props, eventListeners,
+            children) {
     this.props['manifest'] ??= manifest;
     this.props['xmlns'] ??= xmlns;
     this.props['lang'] ??= lang;
@@ -108,40 +124,46 @@ class Html extends BaseHtmlComponent {
 
 class Footer extends BaseHtmlComponent {
   Footer(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super('footer', id, className, style, props, eventListeners, children);
+      : super(key, 'footer', id, className, style, props, eventListeners,
+            children);
 }
 
 class LI extends BaseHtmlComponent {
   LI(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super('li', id, className, style, props, eventListeners, children);
+      : super(key, 'li', id, className, style, props, eventListeners, children);
 }
 
 class Main extends BaseHtmlComponent {
   Main(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super('main', id, className, style, props, eventListeners, children);
+      : super(
+            key, 'main', id, className, style, props, eventListeners, children);
 }
 
 class Meta extends BaseHtmlComponent {
   Meta(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
@@ -151,8 +173,8 @@ class Meta extends BaseHtmlComponent {
       String content,
       String httpEquiv,
       String name})
-      : super('meta', id, className, style, props, eventListeners, children,
-            true) {
+      : super(key, 'meta', id, className, style, props, eventListeners,
+            children, true) {
     this.props['charset'] ??= charset;
     this.props['content'] ??= content;
     this.props['http-equiv'] ??= httpEquiv;
@@ -162,66 +184,75 @@ class Meta extends BaseHtmlComponent {
 
 class Nav extends BaseHtmlComponent {
   Nav(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super('nav', id, className, style, props, eventListeners, children);
+      : super(
+            key, 'nav', id, className, style, props, eventListeners, children);
 }
 
 class OList extends BaseHtmlComponent {
   OList(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super('ol', id, className, style, props, eventListeners, children);
+      : super(key, 'ol', id, className, style, props, eventListeners, children);
 }
 
 class Paragraph extends BaseHtmlComponent {
   Paragraph(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super('p', id, className, style, props, eventListeners, children);
+      : super(key, 'p', id, className, style, props, eventListeners, children);
 }
 
 class Section extends BaseHtmlComponent {
   Section(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super('section', id, className, style, props, eventListeners, children);
+      : super(key, 'section', id, className, style, props, eventListeners,
+            children);
 }
 
 class Span extends BaseHtmlComponent {
   Span(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super('span', id, className, style, props, eventListeners, children);
+      : super(
+            key, 'span', id, className, style, props, eventListeners, children);
 }
 
 class UList extends BaseHtmlComponent {
   UList(
-      {String id,
+      {String key,
+      String id,
       className,
       Style style,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super('ul', id, className, style, props, eventListeners, children);
+      : super(key, 'ul', id, className, style, props, eventListeners, children);
 }

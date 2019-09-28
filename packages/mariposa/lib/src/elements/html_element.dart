@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:html_builder/html_builder.dart';
 import 'package:mariposa/mariposa.dart';
+import 'package:meta/meta.dart';
 import 'package:universal_html/html.dart' show Event;
 import 'style.dart';
 export 'style.dart';
@@ -15,6 +16,7 @@ class BaseHtmlComponent extends ComponentClass {
   final List<StreamSubscription> _subscriptions = [];
 
   BaseHtmlComponent(
+      String key,
       String tagName,
       this.id,
       this.className,
@@ -23,7 +25,7 @@ class BaseHtmlComponent extends ComponentClass {
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children,
       [this.selfClosing = false])
-      : super(tagName: tagName) {
+      : super(tagName: tagName, key: key) {
     this.children.addAll(children ?? []);
     this.eventListeners.addAll(eventListeners ?? {});
     this.props['class'] = className;
