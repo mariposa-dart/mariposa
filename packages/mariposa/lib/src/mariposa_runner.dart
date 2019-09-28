@@ -5,9 +5,11 @@ import 'renderer.dart';
 class MariposaRunner<NodeType, ElementType extends NodeType> {
   final Renderer<NodeType, ElementType> renderer;
   final Component appComponent;
+  bool allowUpdate;
   NodeType _root;
 
-  MariposaRunner(this.appComponent, this.renderer, {NodeType root}) {
+  MariposaRunner(this.appComponent, this.renderer,
+      {NodeType root, this.allowUpdate = true}) {
     _root = root;
     renderer.onUpdate = _onUpdate;
   }
@@ -25,6 +27,7 @@ class MariposaRunner<NodeType, ElementType extends NodeType> {
   }
 
   void _onUpdate() {
+    if (!allowUpdate) return;
     if (_root is ElementType) {
       renderer.incrementalDom.patch(_root as ElementType, render);
     } else {

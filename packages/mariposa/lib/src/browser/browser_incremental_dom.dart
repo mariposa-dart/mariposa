@@ -1,13 +1,14 @@
 import 'dart:async';
-import 'dart:html' as html;
+// import 'dart:html' as html;
 import 'package:mariposa/mariposa.dart';
+import 'package:universal_html/html.dart' as html;
 import 'js_incremental_dom.dart' as js_idom;
 
 class BrowserIncrementalDom extends IncrementalDom<html.Node, html.Element> {
   final StreamController<html.Node> _onNodeCreated = StreamController(),
       _onNodeDeleted = StreamController();
 
-  void Function(html.NodeList) _oldNodesCreated, _oldNodesDeleted;
+  void Function(Iterable<html.Node>) _oldNodesCreated, _oldNodesDeleted;
 
   @override
   Stream<html.Node> get onNodeCreated => _onNodeCreated.stream;

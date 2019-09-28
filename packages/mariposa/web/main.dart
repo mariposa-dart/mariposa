@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'dart:html' hide Node;
 import 'package:html_builder/elements.dart';
 import 'package:mariposa/browser.dart';
 import 'package:mariposa/mariposa.dart';
+import 'package:universal_html/html.dart' hide Node;
 
 main() {
-  return runApp(TimerApp(), querySelector('#app'));
+  return runMariposaApp(TimerApp(), querySelector('#app'));
 }
 
 class TimerApp extends ComponentClass {

@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'component.dart';
 import 'package:html_builder/html_builder.dart';
+import 'package:universal_html/html.dart' as html;
+import 'component.dart';
 import 'incremental_dom.dart';
 import 'render_context.dart';
 
@@ -26,8 +27,9 @@ class Renderer<NodeType, ElementType extends NodeType> {
     var cmp = _unmountedComponents.remove(node);
     if (cmp != null) {
       _mountedComponents[node] = cmp;
-      // TODO: Pass the node in, as an abstract element.
-      cmp.afterMount();
+      cmp
+        ..rawNativeElement = node
+        ..afterMount();
     }
   }
 
@@ -36,7 +38,6 @@ class Renderer<NodeType, ElementType extends NodeType> {
     // end its lifecycle.
     var cmp = _mountedComponents.remove(node);
     if (cmp != null) {
-      // TODO: Pass the node in, as an abstract element.
       cmp.afterUnmount();
     }
   }

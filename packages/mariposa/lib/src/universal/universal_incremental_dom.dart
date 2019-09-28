@@ -33,12 +33,13 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
 
   @override
   Element elementClose(String tagName) {
+    tagName = tagName.toLowerCase();
     if (_elementStack.isEmpty) {
       throw _emptyStack();
-    } else if (_elementStack.first.localName != tagName) {
+    } else if (_elementStack.first.localName.toLowerCase() != tagName) {
       throw StateError('elementClose() was called with "$tagName", '
           'but the current element has tag name '
-          '"${_elementStack.first.localName}".');
+          '"${_elementStack.first.localName.toLowerCase()}".');
     }
     var node = _elementStack.removeFirst();
     if (_elementStack.isNotEmpty) {

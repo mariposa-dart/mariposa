@@ -1,10 +1,11 @@
 import 'dart:async';
-import 'dart:html' as html;
+// import 'dart:html' as html;
 import 'package:mariposa/mariposa.dart';
+import 'package:universal_html/html.dart' as html;
 import 'src/browser/browser.dart';
 export 'src/browser/browser.dart';
 
-Future<void> runApp(Component app, html.Element container) async {
+Future<void> runMariposaApp(Component app, html.Element container) async {
   var runner = MariposaBrowserRunner(app, container);
   runner.firstRender();
   return runner.renderer.done;

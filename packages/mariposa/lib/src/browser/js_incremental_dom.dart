@@ -1,8 +1,9 @@
 @JS('IncrementalDOM')
 library incremental_dom;
 
-import 'dart:html';
+// import 'dart:html';
 import 'package:js/js.dart';
+import 'package:universal_html/html.dart';
 
 @JS()
 external void elementOpen(String tagName, String id, List attributes);
@@ -26,14 +27,14 @@ external Notifications get notifications;
 @anonymous
 abstract class Notifications {
   @JS()
-  external void Function(NodeList) get nodesCreated;
+  external void Function(Iterable<Node>) get nodesCreated;
 
   @JS()
-  external void Function(NodeList) get nodesDeleted;
+  external void Function(Iterable<Node>) get nodesDeleted;
 
   @JS()
-  external set nodesCreated(void Function(NodeList) callback);
+  external set nodesCreated(void Function(Iterable<Node>) callback);
 
   @JS()
-  external set nodesDeleted(void Function(NodeList) callback);
+  external set nodesDeleted(void Function(Iterable<Node>) callback);
 }
