@@ -7,13 +7,22 @@ class MariposaRunner<NodeType, ElementType extends NodeType> {
   final Component appComponent;
   NodeType _root;
 
-  MariposaRunner(this.appComponent, this.renderer) {
+  MariposaRunner(this.appComponent, this.renderer, {NodeType root}) {
+    _root = root;
     renderer.onUpdate = _onUpdate;
   }
 
   Future<void> close() => renderer.close();
 
   NodeType render() => renderer.renderRoot(appComponent);
+
+  void firstRender() {
+    if (_root != null) {
+      _root = render();
+    } else {
+      _onUpdate();
+    }
+  }
 
   void _onUpdate() {
     if (_root is ElementType) {

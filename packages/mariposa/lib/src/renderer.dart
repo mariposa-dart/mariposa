@@ -6,6 +6,7 @@ import 'render_context.dart';
 
 class Renderer<NodeType, ElementType extends NodeType> {
   final IncrementalDom<NodeType, ElementType> incrementalDom;
+  final Completer _done = Completer();
   StreamSubscription<NodeType> _createdSub, _deletedSub;
   void Function() onUpdate;
 
@@ -16,6 +17,8 @@ class Renderer<NodeType, ElementType extends NodeType> {
     _createdSub = incrementalDom.onNodeCreated.listen(onNodeCreated);
     _deletedSub = incrementalDom.onNodeDeleted.listen(onNodeDeleted);
   }
+
+  Future get done => _done.future;
 
   void onNodeCreated(NodeType node) {
     // If this node corresponds to an unmounted component,
@@ -39,6 +42,7 @@ class Renderer<NodeType, ElementType extends NodeType> {
   }
 
   Future<void> close() {
+    _done.complete();
     _createdSub?.cancel();
     _deletedSub?.cancel();
     _mountedComponents.forEach(destroyComponent);
