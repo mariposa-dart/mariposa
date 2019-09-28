@@ -19,6 +19,11 @@ abstract class ComponentClass extends Node {
 
   Node call() => render();
 
+  void setState(void Function() callback) {
+    callback();
+    context.triggerUpdate();
+  }
+
   @mustCallSuper
   void beforeRender(RenderContext context) {
     _context = context;

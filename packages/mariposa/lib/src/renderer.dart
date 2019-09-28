@@ -7,6 +7,7 @@ import 'render_context.dart';
 class Renderer<NodeType, ElementType extends NodeType> {
   final IncrementalDom<NodeType, ElementType> incrementalDom;
   StreamSubscription<NodeType> _createdSub, _deletedSub;
+  void Function() onUpdate;
 
   final Map<NodeType, ComponentClass> _unmountedComponents = {};
   final Map<NodeType, ComponentClass> _mountedComponents = {};
@@ -49,7 +50,7 @@ class Renderer<NodeType, ElementType extends NodeType> {
   }
 
   NodeType renderRoot(Component component) {
-    var context = RenderContext(component);
+    var context = RenderContext(component, triggerUpdate: onUpdate);
     return renderNode(component(), context);
   }
 
