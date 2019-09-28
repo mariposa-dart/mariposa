@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:html_builder/elements.dart';
 import 'package:mariposa/mariposa.dart';
 import 'package:mariposa/universal.dart';
-import 'package:universal_html/html.dart' hide Node;
+import 'package:universal_html/html.dart' hide Node, Text;
 
 main() async {
   var container = DivElement()..text = 'Loading...';
@@ -30,12 +30,12 @@ class TimerApp extends ComponentClass {
 
   @override
   Node render() {
-    return Div(children: []);
-
-    return div(c: [
-      h1(c: [text('Mariposa Demo')]),
-      p(c: [
-        text('Elapsed seconds: $seconds'),
+    return Div(children: [
+      Heading.h1(
+        child: Text('Mariposa Demo'),
+      ),
+      Paragraph(children: [
+        Text('Elapsed seconds: $seconds'),
       ]),
     ]);
   }
