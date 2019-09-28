@@ -13,7 +13,7 @@ abstract class ComponentClass extends Node {
 
   ComponentClass({String tagName = 'div', this.key}) : super(tagName);
 
-  Element get element => rawNativeElement as Element;
+  Element get nativeElement => rawNativeElement as Element;
 
   RenderContext _context;
 

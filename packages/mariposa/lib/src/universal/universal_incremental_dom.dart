@@ -76,7 +76,7 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
       // Loop through the parent's children, searching until we find the `id`.
       // If we find the ID, delete all of the existing children that precede it.
       // Otherwise, use the child at the current index. If the index is greater
-      // than the parent's child count, create a new node.
+      // than the parent's child count, create a node.
       var parent = _elementStack.first;
       if (id != null) {
         var destroy = <Element>[];
