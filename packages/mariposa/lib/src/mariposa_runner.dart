@@ -22,12 +22,12 @@ class MariposaRunner<NodeType, ElementType extends NodeType> {
     if (_root != null) {
       _root = render();
     } else {
-      _onUpdate();
+      _onUpdate(true);
     }
   }
 
-  void _onUpdate() {
-    if (!allowUpdate) return;
+  void _onUpdate([bool force = false]) {
+    if (!allowUpdate && !force) return;
     if (_root is ElementType) {
       renderer.incrementalDom.patch(_root as ElementType, render);
     } else {
