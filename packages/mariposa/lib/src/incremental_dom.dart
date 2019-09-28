@@ -1,17 +1,18 @@
 import 'dart:async';
 
-abstract class IncrementalDom<T> {
-  Stream<T> get onNodeCreated;
-  Stream<T> get onNodeDeleted;
+abstract class IncrementalDom<NodeType, ElementType extends NodeType> {
+  Stream<NodeType> get onNodeCreated;
+  Stream<NodeType> get onNodeDeleted;
   Future<void> close();
 
   void elementOpen(String tagName, String id, Map<String, dynamic> attributes);
 
-  T elementClose(String tagName);
+  ElementType elementClose(String tagName);
 
-  T elementVoid(String tagName, String id, Map<String, dynamic> attributes);
+  ElementType elementVoid(
+      String tagName, String id, Map<String, dynamic> attributes);
 
   void text(String text);
 
-  void patch(T element, void callback());
+  void patch(ElementType element, void callback());
 }
