@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:html_builder/html_builder.dart';
 import 'package:mariposa/mariposa.dart';
-import 'package:meta/meta.dart';
 import 'package:universal_html/html.dart' show Event;
 import 'style.dart';
 export 'style.dart';

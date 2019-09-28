@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:html_builder/html_builder.dart';
-import 'package:universal_html/html.dart' as html;
 import 'component.dart';
 import 'incremental_dom.dart';
 import 'render_context.dart';

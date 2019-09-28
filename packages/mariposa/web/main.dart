@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:html_builder/elements.dart';
 import 'package:mariposa/browser.dart';
 import 'package:mariposa/mariposa.dart';
 import 'package:universal_html/html.dart' hide Node, Text;
