@@ -18,11 +18,11 @@ abstract class ComponentClass extends Node {
   Node call() => render();
 
   @mustCallSuper
-  void initialize(RenderContext context) {
+  void beforeRender(RenderContext context) {
     _context = context;
   }
 
-  void afterCreated() {}
+  void afterMount() {}
 
-  void beforeDestroyed() {}
+  void afterUnmount() {}
 }

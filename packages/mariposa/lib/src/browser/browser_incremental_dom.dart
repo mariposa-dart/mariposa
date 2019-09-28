@@ -58,5 +58,5 @@ class BrowserIncrementalDom extends IncrementalDom<Node, Element> {
       js_idom.patch(element, callback);
 
   @override
-  void text(String text) => js_idom.text(text);
+  Text text(String text) => js_idom.text(text);
 }

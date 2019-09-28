@@ -14,7 +14,7 @@ external Element elementClose(String tagName);
 external Element elementVoid(String tagName, String id, List attributes);
 
 @JS()
-external void text(String text);
+external Text text(String text);
 
 @JS()
 external void patch(Element element, void callback());
