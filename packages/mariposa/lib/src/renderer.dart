@@ -54,7 +54,7 @@ class Renderer<NodeType, ElementType extends NodeType> {
   }
 
   NodeType renderNode(Node vNode, RenderContext context, {String key}) {
-    key ??= vNode.attributes['key']?.toString();
+    key ??= vNode.attributes[mariposaKey]?.toString();
     if (vNode is ComponentClass) {
       return renderComponent(vNode, context);
     } else if (vNode is TextNode) {
