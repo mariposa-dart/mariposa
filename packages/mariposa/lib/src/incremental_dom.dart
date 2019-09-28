@@ -12,7 +12,7 @@ abstract class IncrementalDom<NodeType, ElementType extends NodeType> {
   ElementType elementVoid(
       String tagName, String id, Map<String, dynamic> attributes);
 
-  void text(String text);
+  NodeType text(String text);
 
   void patch(ElementType element, void callback());
 }
