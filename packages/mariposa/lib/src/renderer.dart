@@ -80,7 +80,7 @@ class Renderer<NodeType, ElementType extends NodeType> {
       } else if (v is Map) {
         var buf = v.entries.fold<StringBuffer>(StringBuffer(), (b, entry) {
           if (entry.value == null) return b;
-          return b..write('${entry.key}=${entry.value}; ');
+          return b..write('${entry.key}: ${entry.value}; ');
         });
         return MapEntry(k, buf.toString().trim());
       } else {
