@@ -10,7 +10,7 @@ class Renderer<NodeType, ElementType extends NodeType> {
   StreamSubscription<NodeType> _createdSub, _deletedSub;
   void Function() onUpdate;
 
-  final Map<String, ComponentClass> _componentCache = {}; // TODO: Clear this
+  final Map<String, ComponentClass> _componentCache = {};
   final Map<NodeType, Set<ComponentClass>> _unmountedComponents = {};
   final Map<NodeType, Set<ComponentClass>> _mountedComponents = {};
 
@@ -111,11 +111,14 @@ class Renderer<NodeType, ElementType extends NodeType> {
     if (vNode is ComponentClass) {
       // If we've already rendered a component of this exact type,
       // at this location, return it.
-      // TODO: How robust is this? i.e. Arrays? Associate child locations with a context.
+      //
+      // This is okay because setState() removes necessary paths from the
+      // component cache. Moral of the story: you MUST use setState to update
+      // your state.
       ComponentClass cmp = vNode;
       var existing = _componentCache[context.path];
       if (existing != null && existing.runtimeType == vNode.runtimeType) {
-        // print('$vNode as $location vs. ${_componentCache[location]}');
+        // print('$vNode as ${context.path} vs. ${_componentCache[context.path]}');
         cmp = existing;
       } else {
         _componentCache[context.path] = cmp;
@@ -138,7 +141,8 @@ class Renderer<NodeType, ElementType extends NodeType> {
   }
 
   NodeType renderComponent(ComponentClass vNode, RenderContext parentContext) {
-    var context = vNode.context ?? parentContext.createChild('@c', vNode);
+    var context = vNode.context ??
+        parentContext.createChild('@${vNode.runtimeType}', vNode);
     vNode.beforeRender(context);
     var node = renderNode(vNode.render(), context, key: vNode.key);
     if (node == null) return null;

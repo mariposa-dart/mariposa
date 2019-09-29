@@ -5,6 +5,10 @@ import 'package:universal_html/html.dart' show Event;
 import 'style.dart';
 export 'style.dart';
 
+void Function(Event) castEventHandler<T extends Event>(void Function(T) f) {
+  return f == null ? null : (e) => f(e as T);
+}
+
 class BaseHtmlComponent extends ComponentClass {
   final Map<String, void Function(Event)> eventListeners = {};
   final Map<String, dynamic> props = {};
@@ -26,10 +30,13 @@ class BaseHtmlComponent extends ComponentClass {
       [this.selfClosing = false])
       : super(tagName: tagName, key: key) {
     this.children.addAll(children ?? []);
-    this.eventListeners.addAll(eventListeners ?? {});
     this.props['class'] = className;
     this.props['style'] = style?.compile();
     this.props.addAll(props ?? {});
+
+    var ev = Map<String, void Function(Event)>.from(eventListeners ?? {});
+    ev.removeWhere((_, h) => h == null);
+    this.eventListeners.addAll(ev);
   }
 
   @override
