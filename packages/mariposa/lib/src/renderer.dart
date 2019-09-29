@@ -9,7 +9,6 @@ class Renderer<NodeType, ElementType extends NodeType> {
   final IncrementalDom<NodeType, ElementType> incrementalDom;
   final Completer _done = Completer();
   StreamSubscription<NodeType> _createdSub, _deletedSub;
-  int _renderIteration = 0;
   void Function() onUpdate;
 
   final Map<String, ComponentClass> _componentCache = {};
@@ -74,7 +73,6 @@ class Renderer<NodeType, ElementType extends NodeType> {
             ? (component as ComponentClass)
             : component(),
         context);
-    _renderIteration++;
     return node;
   }
 
@@ -83,6 +81,7 @@ class Renderer<NodeType, ElementType extends NodeType> {
 
     // Remove junk attributes.
     var attrs = Map<String, dynamic>.from(vNode.attributes ?? {});
+
     attrs.removeWhere((k, v) {
       if (v is Iterable) {
         return v.isEmpty;
@@ -110,9 +109,6 @@ class Renderer<NodeType, ElementType extends NodeType> {
 
     // Remove empty attrs.
     normAttrs.removeWhere((k, v) => v.isEmpty);
-
-    // // Add the stamp key.
-    // normAttrs[mariposaStamp] = _renderIteration.toString();
 
     if (vNode is ComponentClass) {
       // If we've already rendered a component of this exact type,
@@ -150,7 +146,14 @@ class Renderer<NodeType, ElementType extends NodeType> {
     var context = vNode.context ??
         parentContext.createChild('@${vNode.runtimeType}', vNode);
     vNode.beforeRender(context);
-    var node = renderNode(vNode.render(), context, key: vNode.key);
+
+    var rendered = vNode.render();
+
+    // Alert components of new props.
+    var newAttrs = vNode.handleAttributesFromRender(rendered.attributes);
+    rendered = Node(rendered.tagName, newAttrs, rendered.children);
+
+    var node = renderNode(rendered, context, key: vNode.key);
     if (node == null) return null;
     if (!_mountedComponents.containsKey(node)) {
       _unmountedComponents.putIfAbsent(node, () => Set())..add(vNode);

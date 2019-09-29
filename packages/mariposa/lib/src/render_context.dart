@@ -23,12 +23,17 @@ class RenderContext {
     return ctx;
   }
 
-  void triggerUpdate() {
-    if (_triggerUpdate != null) {
-      _triggerUpdate(childPaths);
+  void _doUpdate(Iterable<String> paths) {
+    if (parent == null && _triggerUpdate != null) {
+      _triggerUpdate(paths);
     } else {
-      parent?._triggerUpdate(childPaths);
+      parent?._doUpdate(paths);
     }
+  }
+
+  void triggerUpdate() {
+    _doUpdate([path]);
+    // _doUpdate(childPaths);
   }
 
   T findParentOfType<T>() {

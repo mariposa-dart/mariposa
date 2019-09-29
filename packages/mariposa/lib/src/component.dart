@@ -6,11 +6,11 @@ import 'render_context.dart';
 typedef Node Component();
 
 const String mariposaKey = 'data-mariposa-key';
-const String mariposaStamp = 'data-mariposa-stamp';
 
 abstract class ComponentClass<T extends Element> extends Node {
   final String key;
 
+  Map<String, dynamic> _lastProps;
   Element rawNativeElement;
 
   ComponentClass({String tagName = 'div', this.key}) : super(tagName);
@@ -34,6 +34,15 @@ abstract class ComponentClass<T extends Element> extends Node {
   void beforeRender(RenderContext context) {
     _context = context;
   }
+
+  @mustCallSuper
+  Map<String, dynamic> handleAttributesFromRender(Map<String, dynamic> attrs) {
+    return _lastProps = afterAttributeChange(_lastProps, attrs);
+  }
+
+  Map<String, dynamic> afterAttributeChange(
+          Map<String, dynamic> oldAttrs, Map<String, dynamic> newAttrs) =>
+      newAttrs;
 
   void afterMount() {}
 
