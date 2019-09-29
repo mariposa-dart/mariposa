@@ -14,7 +14,7 @@ class Text extends Html5Component {
       Ref<Element> ref,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners})
-      : super(key, tagName, id, className, style, onMount, ref, props,
+      : super.bare(key, tagName, id, className, style, onMount, ref, props,
             eventListeners, [TextNode(text)]);
 
   factory Text(String text,
@@ -125,7 +125,7 @@ class Heading extends Html5Component<HeadingElement> {
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Node child)
-      : super(key, tagName, id, className, style, onMount, ref, props,
+      : super.bare(key, tagName, id, className, style, onMount, ref, props,
             eventListeners, [child]);
 
   factory Heading.h1(
@@ -224,6 +224,6 @@ class Title extends Html5Component<TitleElement> {
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       @required Node child})
-      : super(key, 'title', id, className, style, onMount, ref, props,
+      : super.bare(key, 'title', id, className, style, onMount, ref, props,
             eventListeners, [child]);
 }

@@ -10,11 +10,16 @@ main() {
 }
 
 class TodoApp extends ComponentClass {
+  final Ref<InputElement> inputRef = Ref();
   String inputText = '';
   var todos = <Todo>[];
 
   @override
+  void afterUnmount() => inputRef.close();
+
+  @override
   Node render() {
+    print('IT=$inputText');
     return Div(children: [
       Heading.h1(
         child: Text('Todos (${todos.length})'),
@@ -35,10 +40,11 @@ class TodoApp extends ComponentClass {
       Text.italicized('Click a todo item to remove it.'),
       BR(),
       Input(
+        ref: inputRef,
         placeholder: 'Add an entry...',
         value: inputText,
         onInput: (e) {
-          setState(() => inputText = (e.target as InputElement).value);
+          setState(() => inputText = inputRef.current.value);
         },
       ),
       Button(

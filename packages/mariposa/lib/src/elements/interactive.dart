@@ -18,7 +18,7 @@ class Button extends Html5Component<ButtonElement> {
       Iterable<Node> children,
       void Function(Event) onClick,
       void Function(Event) onDoubleClick})
-      : super(key, 'button', id, className, style, onMount, ref, props,
+      : super.bare(key, 'button', id, className, style, onMount, ref, props,
             eventListeners, children) {
     this.eventListeners['click'] ??= onClick;
     this.eventListeners['dblclick'] ??= onDoubleClick;
@@ -99,7 +99,7 @@ class Input<T extends InputElement> extends Html5Component<T> {
       void Function(KeyboardEvent) onKeyPress,
       void Function(KeyboardEvent) onKeyUp,
       Map<String, void Function(Event)> eventListeners})
-      : super(
+      : super.bare(
             key,
             'input',
             id,

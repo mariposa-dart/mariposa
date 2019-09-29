@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:html_builder/html_builder.dart';
 import 'package:mariposa/mariposa.dart';
+import 'package:meta/meta.dart';
 import 'package:universal_html/html.dart' show Element, Event;
 import 'style.dart';
 export '../component.dart';
@@ -10,6 +11,9 @@ void Function(Event) castEventHandler<T extends Event>(void Function(T) f) {
   return f == null ? null : (e) => f(e as T);
 }
 
+/// Base class for a [Component] that binds to a specific kind of [Element].
+///
+/// Provides infrastructure for easy event bindings.
 class Html5Component<T extends Element> extends ComponentClass<T> {
   final Map<String, void Function(Event)> eventListeners = {};
   final Map<String, dynamic> props = {};
@@ -19,7 +23,7 @@ class Html5Component<T extends Element> extends ComponentClass<T> {
   final bool selfClosing;
   final List<StreamSubscription> _subscriptions = [];
 
-  Html5Component(
+  Html5Component.bare(
       String key,
       String tagName,
       this.id,
@@ -32,6 +36,29 @@ class Html5Component<T extends Element> extends ComponentClass<T> {
       Iterable<Node> children,
       [this.selfClosing = false])
       : super(tagName: tagName, key: key, onMount: onMount, ref: ref) {
+    _initialize(children, className, style, props, eventListeners);
+  }
+
+  Html5Component.tag(String key, String tagName,
+      {this.id,
+      this.className,
+      this.style,
+      void Function(T) onMount,
+      Ref<T> ref,
+      Map<String, dynamic> props,
+      Map<String, void Function(Event)> eventListeners,
+      Iterable<Node> children,
+      this.selfClosing = false})
+      : super(tagName: tagName, key: key, onMount: onMount, ref: ref) {
+    _initialize(children, className, style, props, eventListeners);
+  }
+
+  void _initialize(
+      Iterable<Node> children,
+      className,
+      Style style,
+      Map<String, dynamic> props,
+      Map<String, void Function(Event)> eventListeners) {
     this.children.addAll(children ?? []);
     this.props['class'] = className;
     this.props['style'] = style?.compile();
@@ -43,6 +70,7 @@ class Html5Component<T extends Element> extends ComponentClass<T> {
   }
 
   @override
+  @mustCallSuper
   void afterMount() {
     eventListeners.forEach((name, callback) {
       _subscriptions.add(nativeElement.on[name].listen(callback));
@@ -50,6 +78,7 @@ class Html5Component<T extends Element> extends ComponentClass<T> {
   }
 
   @override
+  @mustCallSuper
   void afterUnmount() {
     for (var sub in _subscriptions) {
       sub.cancel();

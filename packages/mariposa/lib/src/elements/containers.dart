@@ -28,7 +28,7 @@ class Article extends Html5Component {
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super(key, 'article', id, className, style, onMount, ref, props,
+      : super.bare(key, 'article', id, className, style, onMount, ref, props,
             eventListeners, children);
 }
 
@@ -43,7 +43,7 @@ class Aside extends Html5Component {
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super(key, 'aside', id, className, style, onMount, ref, props,
+      : super.bare(key, 'aside', id, className, style, onMount, ref, props,
             eventListeners, children);
 }
 
@@ -58,7 +58,7 @@ class Body extends Html5Component<BodyElement> {
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super(key, 'body', id, className, style, onMount, ref, props,
+      : super.bare(key, 'body', id, className, style, onMount, ref, props,
             eventListeners, children);
 }
 
@@ -72,7 +72,7 @@ class BR extends Html5Component<BRElement> {
       Ref<BRElement> ref,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners})
-      : super(key, 'br', id, className, style, onMount, ref, props,
+      : super.bare(key, 'br', id, className, style, onMount, ref, props,
             eventListeners, [], true);
 }
 
@@ -87,7 +87,7 @@ class Div extends Html5Component<DivElement> {
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super(key, 'div', id, className, style, onMount, ref, props,
+      : super.bare(key, 'div', id, className, style, onMount, ref, props,
             eventListeners, children);
 }
 
@@ -102,7 +102,7 @@ class Head extends Html5Component<HeadElement> {
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super(key, 'head', id, className, style, onMount, ref, props,
+      : super.bare(key, 'head', id, className, style, onMount, ref, props,
             eventListeners, children);
 }
 
@@ -117,7 +117,7 @@ class Header extends Html5Component {
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super(key, 'header', id, className, style, onMount, ref, props,
+      : super.bare(key, 'header', id, className, style, onMount, ref, props,
             eventListeners, children);
 }
 
@@ -131,7 +131,7 @@ class HR extends Html5Component<HRElement> {
       Ref<HRElement> ref,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners})
-      : super(key, 'hr', id, className, style, onMount, ref, props,
+      : super.bare(key, 'hr', id, className, style, onMount, ref, props,
             eventListeners, [], true);
 }
 
@@ -149,7 +149,7 @@ class Html extends Html5Component<HtmlHtmlElement> {
       String manifest,
       String xmlns,
       String lang})
-      : super(key, 'html', id, className, style, onMount, ref, props,
+      : super.bare(key, 'html', id, className, style, onMount, ref, props,
             eventListeners, children) {
     this.props['manifest'] ??= manifest;
     this.props['xmlns'] ??= xmlns;
@@ -168,7 +168,7 @@ class Footer extends Html5Component {
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super(key, 'footer', id, className, style, onMount, ref, props,
+      : super.bare(key, 'footer', id, className, style, onMount, ref, props,
             eventListeners, children);
 }
 
@@ -183,7 +183,7 @@ class LI extends Html5Component<LIElement> {
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super(key, 'li', id, className, style, onMount, ref, props,
+      : super.bare(key, 'li', id, className, style, onMount, ref, props,
             eventListeners, children);
 }
 
@@ -198,7 +198,7 @@ class Main extends Html5Component {
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super(key, 'main', id, className, style, onMount, ref, props,
+      : super.bare(key, 'main', id, className, style, onMount, ref, props,
             eventListeners, children);
 }
 
@@ -217,7 +217,7 @@ class Meta extends Html5Component<MetaElement> {
       String content,
       String httpEquiv,
       String name})
-      : super(key, 'meta', id, className, style, onMount, ref, props,
+      : super.bare(key, 'meta', id, className, style, onMount, ref, props,
             eventListeners, children, true) {
     this.props['charset'] ??= charset;
     this.props['content'] ??= content;
@@ -237,7 +237,7 @@ class Nav extends Html5Component {
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super(key, 'nav', id, className, style, onMount, ref, props,
+      : super.bare(key, 'nav', id, className, style, onMount, ref, props,
             eventListeners, children);
 }
 
@@ -252,7 +252,7 @@ class OList extends Html5Component<OListElement> {
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super(key, 'ol', id, className, style, onMount, ref, props,
+      : super.bare(key, 'ol', id, className, style, onMount, ref, props,
             eventListeners, children);
 }
 
@@ -267,7 +267,7 @@ class Paragraph extends Html5Component<ParagraphElement> {
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super(key, 'p', id, className, style, onMount, ref, props,
+      : super.bare(key, 'p', id, className, style, onMount, ref, props,
             eventListeners, children);
 }
 
@@ -282,7 +282,7 @@ class Section extends Html5Component {
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super(key, 'section', id, className, style, onMount, ref, props,
+      : super.bare(key, 'section', id, className, style, onMount, ref, props,
             eventListeners, children);
 }
 
@@ -297,7 +297,7 @@ class Span extends Html5Component<SpanElement> {
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super(key, 'span', id, className, style, onMount, ref, props,
+      : super.bare(key, 'span', id, className, style, onMount, ref, props,
             eventListeners, children);
 }
 
@@ -312,6 +312,6 @@ class UList extends Html5Component<UListElement> {
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children})
-      : super(key, 'ul', id, className, style, onMount, ref, props,
+      : super.bare(key, 'ul', id, className, style, onMount, ref, props,
             eventListeners, children);
 }

@@ -19,7 +19,7 @@ class Image extends Html5Component<ImageElement> {
       Ref<ImageElement> ref,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners})
-      : super(
+      : super.bare(
             key,
             'img',
             id,
