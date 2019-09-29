@@ -62,7 +62,9 @@ class Renderer<NodeType, ElementType extends NodeType> {
 
   void _handleUpdate(Iterable<String> affectedPaths) {
     // Remove any affected paths from the cache, as they possibly have new content.
-    affectedPaths.forEach(_componentCache.remove);
+    for (var path in affectedPaths) {
+      _componentCache.remove(path); //?.afterUnmount();
+    }
     if (onUpdate != null) onUpdate();
   }
 
@@ -120,7 +122,6 @@ class Renderer<NodeType, ElementType extends NodeType> {
       ComponentClass cmp = vNode;
       var existing = _componentCache[context.path];
       if (existing != null && existing.runtimeType == vNode.runtimeType) {
-        // print('$vNode as ${context.path} vs. ${_componentCache[context.path]}');
         cmp = existing;
       } else {
         _componentCache[context.path] = cmp;
@@ -149,9 +150,11 @@ class Renderer<NodeType, ElementType extends NodeType> {
 
     var rendered = vNode.render();
 
-    // Alert components of new props.
-    var newAttrs = vNode.handleAttributesFromRender(rendered.attributes);
-    rendered = Node(rendered.tagName, newAttrs, rendered.children);
+    if (rendered is! ComponentClass) {
+      // Alert components of new props.
+      var newAttrs = vNode.handleAttributesFromRender(rendered.attributes);
+      rendered = Node(rendered.tagName, newAttrs, rendered.children);
+    }
 
     var node = renderNode(rendered, context, key: vNode.key);
     if (node == null) return null;

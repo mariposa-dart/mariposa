@@ -60,9 +60,17 @@ class Html5Component<T extends Element> extends ComponentClass<T> {
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners) {
     this.children.addAll(children ?? []);
-    this.props['class'] = className;
-    this.props['style'] = style?.compile();
+    if (className != null) this.props['class'] = className;
+    if (style != null) {
+      var buf = style.compile().entries.fold<StringBuffer>(StringBuffer(),
+          (b, entry) {
+        if (entry.value == null) return b;
+        return b..write('${entry.key}: ${entry.value};');
+      });
+      if (buf.isNotEmpty) this.props['style'] = buf.toString();
+    }
     this.props.addAll(props ?? {});
+    // if (this.props.isNotEmpty) print('$this => ${this.props}');
 
     var ev = Map<String, void Function(Event)>.from(eventListeners ?? {});
     ev.removeWhere((_, h) => h == null);

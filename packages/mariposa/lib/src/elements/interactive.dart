@@ -2,7 +2,7 @@ import 'package:html_builder/html_builder.dart';
 import 'package:merge_map/merge_map.dart';
 import 'package:meta/meta.dart';
 import 'package:universal_html/html.dart'
-    show ButtonElement, Event, FocusEvent, KeyboardEvent, InputElement;
+    show ButtonElement, Event, FocusEvent, KeyboardEvent, InputElementBase;
 import 'html_element.dart';
 
 class Button extends Html5Component<ButtonElement> {
@@ -78,7 +78,7 @@ class Button extends Html5Component<ButtonElement> {
   }
 }
 
-class Input<T extends InputElement> extends Html5Component<T> {
+class Input<T extends InputElementBase> extends Html5Component<T> {
   Input(
       {String key,
       String id,
@@ -133,7 +133,6 @@ class Input<T extends InputElement> extends Html5Component<T> {
   @override
   Map<String, dynamic> afterAttributeChange(
       Map<String, dynamic> oldAttrs, Map<String, dynamic> newAttrs) {
-    print([nativeElement, oldAttrs, newAttrs]);
     nativeElement?.value = newAttrs['value']?.toString();
     return newAttrs;
   }

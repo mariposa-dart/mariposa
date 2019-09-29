@@ -1,5 +1,6 @@
 import 'package:html_builder/elements.dart';
 import 'package:mariposa/mariposa.dart';
+import 'package:merge_map/merge_map.dart';
 import 'package:meta/meta.dart';
 import 'package:universal_html/html.dart' show Event, ImageElement;
 import 'html_element.dart';
@@ -27,16 +28,23 @@ class Image extends Html5Component<ImageElement> {
             style,
             onMount,
             ref,
-            Map.from(props ?? {})
-              ..addAll({
+            mergeMap([
+              {
                 'alt': alt,
                 'height': height,
                 'src': src,
                 'title': title,
                 'width': width
-              }),
+              },
+              props
+            ]),
             eventListeners,
             []);
+
+  beforeRender(RenderContext context) {
+    print('Initialize IMAGE $hashCode');
+    super.beforeRender(context);
+  }
 }
 
 class Builder extends ComponentClass {

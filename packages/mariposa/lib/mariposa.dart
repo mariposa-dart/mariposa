@@ -4,3 +4,4 @@ export 'src/component.dart';
 export 'src/incremental_dom.dart';
 export 'src/mariposa_runner.dart';
 export 'src/renderer.dart';
+export 'src/render_context.dart';

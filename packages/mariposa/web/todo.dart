@@ -19,7 +19,6 @@ class TodoApp extends ComponentClass {
 
   @override
   Node render() {
-    print('IT=$inputText');
     return Div(children: [
       Heading.h1(
         child: Text('Todos (${todos.length})'),
@@ -39,7 +38,7 @@ class TodoApp extends ComponentClass {
       BR(),
       Text.italicized('Click a todo item to remove it.'),
       BR(),
-      Input(
+      Input<TextInputElement>(
         ref: inputRef,
         placeholder: 'Add an entry...',
         value: inputText,
@@ -53,7 +52,7 @@ class TodoApp extends ComponentClass {
           if (inputText.isNotEmpty) {
             setState(() {
               todos.add(Todo(inputText));
-              inputText = '';
+              inputRef.current?.value = inputText = '';
             });
           }
         },
@@ -67,11 +66,17 @@ class TodoItem extends ComponentClass {
   final void Function() onDelete;
 
   TodoItem(this.todo, {@required this.onDelete});
+  // : super(key: todo.hashCode.toString());
 
   @override
   Node render() {
+    // return Node('img', {'src': todo.text, 'style': 'max-height: 3em'});
+
+    // // return Text.bold('wtf?');
+    // return Image(src: todo.text, eventListeners: {'click': (_) => onDelete()});
     return LI(
         children: [Text(todo.text)],
+        style: Style(color: 'blue'),
         eventListeners: {'click': (_) => onDelete()});
   }
 }

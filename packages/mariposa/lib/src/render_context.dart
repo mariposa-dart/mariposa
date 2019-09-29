@@ -32,8 +32,8 @@ class RenderContext {
   }
 
   void triggerUpdate() {
-    _doUpdate([path]);
-    // _doUpdate(childPaths);
+    // _doUpdate([path]);
+    _doUpdate(childPaths);
   }
 
   T findParentOfType<T>() {
