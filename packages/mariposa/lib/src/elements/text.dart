@@ -1,7 +1,7 @@
 import 'package:html_builder/src/node.dart';
 import 'package:meta/meta.dart';
 import 'package:universal_html/html.dart'
-    show Event, HeadingElement, TitleElement;
+    show Element, Event, HeadingElement, TitleElement;
 import 'html_element.dart';
 
 class Text extends Html5Component {
@@ -10,10 +10,12 @@ class Text extends Html5Component {
       String id,
       className,
       Style style,
+      void Function(Element) onMount,
+      Ref<Element> ref,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners})
-      : super(key, tagName, id, className, style, props, eventListeners,
-            [TextNode(text)]);
+      : super(key, tagName, id, className, style, onMount, ref, props,
+            eventListeners, [TextNode(text)]);
 
   factory Text(String text,
       {String key,
@@ -118,11 +120,13 @@ class Heading extends Html5Component<HeadingElement> {
       String id,
       className,
       Style style,
+      void Function(HeadingElement) onMount,
+      Ref<HeadingElement> ref,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Node child)
-      : super(
-            key, tagName, id, className, style, props, eventListeners, [child]);
+      : super(key, tagName, id, className, style, onMount, ref, props,
+            eventListeners, [child]);
 
   factory Heading.h1(
       {@required Node child,
@@ -130,10 +134,12 @@ class Heading extends Html5Component<HeadingElement> {
       String id,
       className,
       Style style,
+      void Function(HeadingElement) onMount,
+      Ref<HeadingElement> ref,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners}) {
-    return Heading._(
-        key, 'h1', id, className, style, props, eventListeners, child);
+    return Heading._(key, 'h1', id, className, style, onMount, ref, props,
+        eventListeners, child);
   }
 
   factory Heading.h2(
@@ -142,10 +148,12 @@ class Heading extends Html5Component<HeadingElement> {
       String id,
       className,
       Style style,
+      void Function(HeadingElement) onMount,
+      Ref<HeadingElement> ref,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners}) {
-    return Heading._(
-        key, 'h2', id, className, style, props, eventListeners, child);
+    return Heading._(key, 'h2', id, className, style, onMount, ref, props,
+        eventListeners, child);
   }
 
   factory Heading.h3(
@@ -154,10 +162,12 @@ class Heading extends Html5Component<HeadingElement> {
       String id,
       className,
       Style style,
+      void Function(HeadingElement) onMount,
+      Ref<HeadingElement> ref,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners}) {
-    return Heading._(
-        key, 'h3', id, className, style, props, eventListeners, child);
+    return Heading._(key, 'h3', id, className, style, onMount, ref, props,
+        eventListeners, child);
   }
 
   factory Heading.h4(
@@ -166,10 +176,12 @@ class Heading extends Html5Component<HeadingElement> {
       String id,
       className,
       Style style,
+      void Function(HeadingElement) onMount,
+      Ref<HeadingElement> ref,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners}) {
-    return Heading._(
-        key, 'h4', id, className, style, props, eventListeners, child);
+    return Heading._(key, 'h4', id, className, style, onMount, ref, props,
+        eventListeners, child);
   }
 
   factory Heading.h5(
@@ -178,10 +190,12 @@ class Heading extends Html5Component<HeadingElement> {
       String id,
       className,
       Style style,
+      void Function(HeadingElement) onMount,
+      Ref<HeadingElement> ref,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners}) {
-    return Heading._(
-        key, 'h5', id, className, style, props, eventListeners, child);
+    return Heading._(key, 'h5', id, className, style, onMount, ref, props,
+        eventListeners, child);
   }
 
   factory Heading.h6(
@@ -190,10 +204,12 @@ class Heading extends Html5Component<HeadingElement> {
       String id,
       className,
       Style style,
+      void Function(HeadingElement) onMount,
+      Ref<HeadingElement> ref,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners}) {
-    return Heading._(
-        key, 'h6', id, className, style, props, eventListeners, child);
+    return Heading._(key, 'h6', id, className, style, onMount, ref, props,
+        eventListeners, child);
   }
 }
 
@@ -203,9 +219,11 @@ class Title extends Html5Component<TitleElement> {
       String id,
       className,
       Style style,
+      void Function(TitleElement) onMount,
+      Ref<TitleElement> ref,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       @required Node child})
-      : super(
-            key, 'title', id, className, style, props, eventListeners, [child]);
+      : super(key, 'title', id, className, style, onMount, ref, props,
+            eventListeners, [child]);
 }

@@ -11,13 +11,15 @@ class Button extends Html5Component<ButtonElement> {
       String id,
       className,
       Style style,
+      void Function(ButtonElement) onMount,
+      Ref<ButtonElement> ref,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children,
       void Function(Event) onClick,
       void Function(Event) onDoubleClick})
-      : super(key, 'button', id, className, style, props, eventListeners,
-            children) {
+      : super(key, 'button', id, className, style, onMount, ref, props,
+            eventListeners, children) {
     this.eventListeners['click'] ??= onClick;
     this.eventListeners['dblclick'] ??= onDoubleClick;
   }
@@ -27,6 +29,8 @@ class Button extends Html5Component<ButtonElement> {
       String id,
       className,
       Style style,
+      void Function(ButtonElement) onMount,
+      Ref<ButtonElement> ref,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       @required Node child,
@@ -41,7 +45,9 @@ class Button extends Html5Component<ButtonElement> {
         eventListeners: eventListeners,
         children: [child],
         onClick: onClick,
-        onDoubleClick: onDoubleClick);
+        onDoubleClick: onDoubleClick,
+        onMount: onMount,
+        ref: ref);
   }
 
   factory Button.icon(
@@ -49,6 +55,8 @@ class Button extends Html5Component<ButtonElement> {
       String id,
       className,
       Style style,
+      void Function(ButtonElement) onMount,
+      Ref<ButtonElement> ref,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       @required Node icon,
@@ -64,7 +72,9 @@ class Button extends Html5Component<ButtonElement> {
         eventListeners: eventListeners,
         children: [icon, child],
         onClick: onClick,
-        onDoubleClick: onDoubleClick);
+        onDoubleClick: onDoubleClick,
+        onMount: onMount,
+        ref: ref);
   }
 }
 
@@ -78,6 +88,8 @@ class Input<T extends InputElement> extends Html5Component<T> {
       String type = 'text',
       String value,
       Style style,
+      void Function(T) onMount,
+      Ref<T> ref,
       Map<String, dynamic> props,
       void Function(FocusEvent) onBlur,
       void Function(Event) onChange,
@@ -93,6 +105,8 @@ class Input<T extends InputElement> extends Html5Component<T> {
             id,
             className,
             style,
+            onMount,
+            ref,
             mergeMap([
               {
                 'checked': checked,

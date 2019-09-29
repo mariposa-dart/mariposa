@@ -3,6 +3,7 @@ import 'package:html_builder/html_builder.dart';
 import 'package:mariposa/mariposa.dart';
 import 'package:universal_html/html.dart' show Element, Event;
 import 'style.dart';
+export '../component.dart';
 export 'style.dart';
 
 void Function(Event) castEventHandler<T extends Event>(void Function(T) f) {
@@ -24,11 +25,13 @@ class Html5Component<T extends Element> extends ComponentClass<T> {
       this.id,
       this.className,
       this.style,
+      void Function(T) onMount,
+      Ref<T> ref,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners,
       Iterable<Node> children,
       [this.selfClosing = false])
-      : super(tagName: tagName, key: key) {
+      : super(tagName: tagName, key: key, onMount: onMount, ref: ref) {
     this.children.addAll(children ?? []);
     this.props['class'] = className;
     this.props['style'] = style?.compile();

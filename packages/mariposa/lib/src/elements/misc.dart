@@ -15,6 +15,8 @@ class Image extends Html5Component<ImageElement> {
       int width,
       className,
       Style style,
+      void Function(ImageElement) onMount,
+      Ref<ImageElement> ref,
       Map<String, dynamic> props,
       Map<String, void Function(Event)> eventListeners})
       : super(
@@ -23,6 +25,8 @@ class Image extends Html5Component<ImageElement> {
             id,
             className,
             style,
+            onMount,
+            ref,
             Map.from(props ?? {})
               ..addAll({
                 'alt': alt,
