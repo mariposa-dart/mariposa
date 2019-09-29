@@ -1,22 +1,33 @@
 import 'component.dart';
 
 class RenderContext {
+  final String path;
   final Component component;
   final RenderContext parent;
-  final void Function() _triggerUpdate;
+  final Set<String> childPaths = Set();
+  final void Function(Iterable<String>) _triggerUpdate;
 
-  RenderContext(this.component, {this.parent, void Function() triggerUpdate})
-      : _triggerUpdate = triggerUpdate;
+  RenderContext(this.path, this.component,
+      {this.parent, void Function(Iterable<String>) triggerUpdate})
+      : _triggerUpdate = triggerUpdate {
+    childPaths.add(path);
+  }
 
-  RenderContext createChild(Component child) {
-    return RenderContext(child, parent: this);
+  RenderContext createChild(String subLocation, Component child) {
+    var ctx = RenderContext('$path:$subLocation', child, parent: this);
+    var cur = this;
+    while (cur != null) {
+      cur.childPaths.add(ctx.path);
+      cur = cur.parent;
+    }
+    return ctx;
   }
 
   void triggerUpdate() {
     if (_triggerUpdate != null) {
-      _triggerUpdate();
+      _triggerUpdate(childPaths);
     } else {
-      parent?._triggerUpdate();
+      parent?._triggerUpdate(childPaths);
     }
   }
 

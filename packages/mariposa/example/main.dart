@@ -6,7 +6,7 @@ main() async {
   var container = DivElement()
     ..id = 'container'
     ..text = 'Loading...';
-  await renderOnce(HelloApp(), container);
+  await renderOnce(() => HelloApp(), container);
 
   // Print the results.
   print(container.outerHtml);

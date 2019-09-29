@@ -26,11 +26,8 @@ main() async {
         var body = BodyElement();
         doc.append(body);
         await renderOnce(x, body);
-        res
-          ..contentType = MediaType('text', 'html')
-          ..write(doc.outerHtml);
-        await res.close();
-        return '';
+        res.contentType = MediaType('text', 'html');
+        return doc.outerHtml;
       } else {
         return await oldSerializer(x);
       }

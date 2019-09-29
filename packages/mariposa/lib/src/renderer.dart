@@ -10,8 +10,9 @@ class Renderer<NodeType, ElementType extends NodeType> {
   StreamSubscription<NodeType> _createdSub, _deletedSub;
   void Function() onUpdate;
 
-  final Map<NodeType, ComponentClass> _unmountedComponents = {};
-  final Map<NodeType, ComponentClass> _mountedComponents = {};
+  final Map<String, ComponentClass> _componentCache = {}; // TODO: Clear this
+  final Map<NodeType, Set<ComponentClass>> _unmountedComponents = {};
+  final Map<NodeType, Set<ComponentClass>> _mountedComponents = {};
 
   Renderer(this.incrementalDom) {
     _createdSub = incrementalDom.onNodeCreated.listen(onNodeCreated);
@@ -23,21 +24,25 @@ class Renderer<NodeType, ElementType extends NodeType> {
   void onNodeCreated(NodeType node) {
     // If this node corresponds to an unmounted component,
     // then run its afterCreate.
-    var cmp = _unmountedComponents.remove(node);
-    if (cmp != null) {
-      _mountedComponents[node] = cmp;
-      cmp
-        ..rawNativeElement = node
-        ..afterMount();
+    var cmpList = _unmountedComponents.remove(node);
+    if (cmpList != null) {
+      _mountedComponents[node] = cmpList;
+      for (var cmp in cmpList) {
+        cmp
+          ..rawNativeElement = node
+          ..afterMount();
+      }
     }
   }
 
   void onNodeDeleted(NodeType node) {
     // If this node corresponds to a mounted component,
     // end its lifecycle.
-    var cmp = _mountedComponents.remove(node);
-    if (cmp != null) {
-      cmp.afterUnmount();
+    var cmpList = _mountedComponents.remove(node);
+    if (cmpList != null) {
+      for (var cmp in cmpList) {
+        cmp.afterUnmount();
+      }
     }
   }
 
@@ -45,7 +50,8 @@ class Renderer<NodeType, ElementType extends NodeType> {
     _done.complete();
     _createdSub?.cancel();
     _deletedSub?.cancel();
-    _mountedComponents.forEach(destroyComponent);
+    _mountedComponents
+        .forEach((n, l) => l.forEach((c) => destroyComponent(n, c)));
     return incrementalDom.close();
   }
 
@@ -53,9 +59,20 @@ class Renderer<NodeType, ElementType extends NodeType> {
     component.afterUnmount();
   }
 
+  void _handleUpdate(Iterable<String> affectedPaths) {
+    // Remove any affected paths from the cache, as they possibly have new content.
+    affectedPaths.forEach(_componentCache.remove);
+    if (onUpdate != null) onUpdate();
+  }
+
   NodeType renderRoot(Component component) {
-    var context = RenderContext(component, triggerUpdate: onUpdate);
-    return renderNode(component(), context);
+    var context = RenderContext('%r', component, triggerUpdate: _handleUpdate);
+    var node = renderNode(
+        component is ComponentClass
+            ? (component as ComponentClass)
+            : component(),
+        context);
+    return node;
   }
 
   NodeType renderNode(Node vNode, RenderContext context, {String key}) {
@@ -92,26 +109,42 @@ class Renderer<NodeType, ElementType extends NodeType> {
     normAttrs.removeWhere((k, v) => v.isEmpty);
 
     if (vNode is ComponentClass) {
-      return renderComponent(vNode, context);
+      // If we've already rendered a component of this exact type,
+      // at this location, return it.
+      // TODO: How robust is this? i.e. Arrays? Associate child locations with a context.
+      ComponentClass cmp = vNode;
+      var existing = _componentCache[context.path];
+      if (existing != null && existing.runtimeType == vNode.runtimeType) {
+        // print('$vNode as $location vs. ${_componentCache[location]}');
+        cmp = existing;
+      } else {
+        _componentCache[context.path] = cmp;
+      }
+      return renderComponent(cmp, context);
     } else if (vNode is TextNode) {
       return incrementalDom.text(vNode.text);
     } else if (vNode is SelfClosingNode) {
       return incrementalDom.elementVoid(vNode.tagName, key, normAttrs);
     } else {
       incrementalDom.elementOpen(vNode.tagName, key, normAttrs);
-      for (var child in vNode.children) {
-        renderNode(child, context);
+      for (int i = 0; i < vNode.children.length; i++) {
+        var child = vNode.children[i];
+        var ctx = context;
+        if (child is ComponentClass) ctx = context.createChild('#$i', child);
+        renderNode(child, ctx);
       }
       return incrementalDom.elementClose(vNode.tagName);
     }
   }
 
   NodeType renderComponent(ComponentClass vNode, RenderContext parentContext) {
-    var context = parentContext.createChild(vNode);
+    var context = vNode.context ?? parentContext.createChild('@c', vNode);
     vNode.beforeRender(context);
     var node = renderNode(vNode.render(), context, key: vNode.key);
     if (node == null) return null;
-    _unmountedComponents[node] = vNode;
+    if (!_mountedComponents.containsKey(node)) {
+      _unmountedComponents.putIfAbsent(node, () => Set())..add(vNode);
+    }
     return node;
   }
 }

@@ -4,7 +4,7 @@ import 'package:mariposa/mariposa.dart';
 import 'package:universal_html/html.dart' hide Node, Text;
 
 main() {
-  return runMariposaApp(TimerApp(), querySelector('#app'));
+  return runMariposaApp(() => TimerApp(), querySelector('#app'));
 }
 
 class TimerApp extends ComponentClass {
