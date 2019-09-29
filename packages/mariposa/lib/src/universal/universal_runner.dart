@@ -21,4 +21,7 @@ class MariposaUniversalRunner extends MariposaRunner<html.Node, html.Element> {
       : super(appComponent,
             Renderer<html.Node, html.Element>(UniversalIncrementalDom()),
             root: container, allowUpdate: allowUpdate);
+
+  @override
+  void clearRootChildren(html.Element element) => element.nodes.clear();
 }

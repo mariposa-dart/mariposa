@@ -16,4 +16,7 @@ class MariposaBrowserRunner extends MariposaRunner<html.Node, html.Element> {
       : super(appComponent,
             Renderer<html.Node, html.Element>(BrowserIncrementalDom()),
             root: container);
+
+  @override
+  void clearRootChildren(html.Element element) => element.nodes.clear();
 }

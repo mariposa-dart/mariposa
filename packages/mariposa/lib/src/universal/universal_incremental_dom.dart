@@ -46,15 +46,21 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
       // If we are patching, modify the children in-place.
       // Otherwise, add the element to the parent.
       if (_isPatching) {
-        // In elementOpen(), we pushed a childIndex. Pop it.
-        _childIndexStack.removeFirst();
+        if (_childIndexStack.length < 2 ||
+            _childIndexStack.first >=
+                _elementStack.elementAt(1).children.length) {
+          _elementStack.first.append(node);
+        } else {
+          // In elementOpen(), we pushed a childIndex. Pop it.
+          _childIndexStack.removeFirst();
 
-        // However, the parent may be an element with multiple children, so
-        // we should increment the child index if so.
-        if (_childIndexStack.isNotEmpty && _childIndexStack.first != -1) {
-          // Because this is an in-place modification, actually do nothing here.
-          // Just increment the child index.
-          _childIndexStack.addFirst(_childIndexStack.removeFirst() + 1);
+          // However, the parent may be an element with multiple children, so
+          // we should increment the child index if so.
+          if (_childIndexStack.isNotEmpty && _childIndexStack.first != -1) {
+            // Because this is an in-place modification, actually do nothing here.
+            // Just increment the child index.
+            _childIndexStack.addFirst(_childIndexStack.removeFirst() + 1);
+          }
         }
       } else {
         _elementStack.first.append(node);
@@ -67,6 +73,17 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
   void elementOpen(String tagName, String id, Map<String, dynamic> attributes) {
     var replaceIndex = _childIndexStack.isEmpty ? -1 : _childIndexStack.first;
     Element replace;
+
+    // Remove junk attributes.
+    attributes.removeWhere((k, v) {
+      if (v is Iterable) {
+        return v.isEmpty;
+      } else if (v is Map) {
+        return v.isEmpty;
+      } else {
+        return v == null || v == false;
+      }
+    });
 
     // If we're patching, _childIndex will be -1 at the root.
     if (_isPatching &&
