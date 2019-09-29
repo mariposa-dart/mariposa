@@ -1,6 +1,7 @@
 import 'package:html_builder/src/node.dart';
 import 'package:meta/meta.dart';
-import 'package:universal_html/html.dart' show Event;
+import 'package:universal_html/html.dart'
+    show Event, HeadingElement, TitleElement;
 import 'html_element.dart';
 
 class Text extends Html5Component {
@@ -110,7 +111,7 @@ class Text extends Html5Component {
   }
 }
 
-class Heading extends Html5Component {
+class Heading extends Html5Component<HeadingElement> {
   Heading._(
       String key,
       String tagName,
@@ -196,7 +197,7 @@ class Heading extends Html5Component {
   }
 }
 
-class Title extends Html5Component {
+class Title extends Html5Component<TitleElement> {
   Title(
       {String key,
       String id,

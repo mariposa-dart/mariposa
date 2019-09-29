@@ -1,5 +1,19 @@
 import 'package:html_builder/html_builder.dart';
-import 'package:universal_html/html.dart' show Event;
+import 'package:universal_html/html.dart'
+    show
+        BodyElement,
+        BRElement,
+        DivElement,
+        HeadElement,
+        HRElement,
+        HtmlHtmlElement,
+        LIElement,
+        MetaElement,
+        OListElement,
+        ParagraphElement,
+        SpanElement,
+        UListElement,
+        Event;
 import 'html_element.dart';
 
 class Article extends Html5Component {
@@ -28,7 +42,7 @@ class Aside extends Html5Component {
             children);
 }
 
-class Body extends Html5Component {
+class Body extends Html5Component<BodyElement> {
   Body(
       {String key,
       String id,
@@ -41,7 +55,7 @@ class Body extends Html5Component {
             key, 'body', id, className, style, props, eventListeners, children);
 }
 
-class BR extends Html5Component {
+class BR extends Html5Component<BRElement> {
   BR(
       {String key,
       String id,
@@ -52,7 +66,7 @@ class BR extends Html5Component {
       : super(key, 'br', id, className, style, props, eventListeners, [], true);
 }
 
-class Div extends Html5Component {
+class Div extends Html5Component<DivElement> {
   Div(
       {String key,
       String id,
@@ -65,7 +79,7 @@ class Div extends Html5Component {
             key, 'div', id, className, style, props, eventListeners, children);
 }
 
-class Head extends Html5Component {
+class Head extends Html5Component<HeadElement> {
   Head(
       {String key,
       String id,
@@ -91,7 +105,7 @@ class Header extends Html5Component {
             children);
 }
 
-class HR extends Html5Component {
+class HR extends Html5Component<HRElement> {
   HR(
       {String key,
       String id,
@@ -102,7 +116,7 @@ class HR extends Html5Component {
       : super(key, 'hr', id, className, style, props, eventListeners, [], true);
 }
 
-class Html extends Html5Component {
+class Html extends Html5Component<HtmlHtmlElement> {
   Html(
       {String key,
       String id,
@@ -135,7 +149,7 @@ class Footer extends Html5Component {
             children);
 }
 
-class LI extends Html5Component {
+class LI extends Html5Component<LIElement> {
   LI(
       {String key,
       String id,
@@ -160,7 +174,7 @@ class Main extends Html5Component {
             key, 'main', id, className, style, props, eventListeners, children);
 }
 
-class Meta extends Html5Component {
+class Meta extends Html5Component<MetaElement> {
   Meta(
       {String key,
       String id,
@@ -195,7 +209,7 @@ class Nav extends Html5Component {
             key, 'nav', id, className, style, props, eventListeners, children);
 }
 
-class OList extends Html5Component {
+class OList extends Html5Component<OListElement> {
   OList(
       {String key,
       String id,
@@ -207,7 +221,7 @@ class OList extends Html5Component {
       : super(key, 'ol', id, className, style, props, eventListeners, children);
 }
 
-class Paragraph extends Html5Component {
+class Paragraph extends Html5Component<ParagraphElement> {
   Paragraph(
       {String key,
       String id,
@@ -232,7 +246,7 @@ class Section extends Html5Component {
             children);
 }
 
-class Span extends Html5Component {
+class Span extends Html5Component<SpanElement> {
   Span(
       {String key,
       String id,
@@ -245,7 +259,7 @@ class Span extends Html5Component {
             key, 'span', id, className, style, props, eventListeners, children);
 }
 
-class UList extends Html5Component {
+class UList extends Html5Component<UListElement> {
   UList(
       {String key,
       String id,

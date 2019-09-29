@@ -1,10 +1,10 @@
 import 'package:html_builder/elements.dart';
 import 'package:mariposa/mariposa.dart';
 import 'package:meta/meta.dart';
-import 'package:universal_html/html.dart' show Event;
+import 'package:universal_html/html.dart' show Event, ImageElement;
 import 'html_element.dart';
 
-class Image extends Html5Component {
+class Image extends Html5Component<ImageElement> {
   Image(
       {String key,
       String id,

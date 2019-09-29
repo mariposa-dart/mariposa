@@ -1,10 +1,11 @@
 import 'package:html_builder/html_builder.dart';
 import 'package:merge_map/merge_map.dart';
 import 'package:meta/meta.dart';
-import 'package:universal_html/html.dart' show Event, KeyboardEvent;
+import 'package:universal_html/html.dart'
+    show ButtonElement, Event, FocusEvent, KeyboardEvent, InputElement;
 import 'html_element.dart';
 
-class Button extends Html5Component {
+class Button extends Html5Component<ButtonElement> {
   Button._(
       {String key,
       String id,
@@ -67,7 +68,7 @@ class Button extends Html5Component {
   }
 }
 
-class Input extends Html5Component {
+class Input<T extends InputElement> extends Html5Component<T> {
   Input(
       {String key,
       String id,
@@ -78,9 +79,9 @@ class Input extends Html5Component {
       String value,
       Style style,
       Map<String, dynamic> props,
-      void Function(Event) onBlur,
+      void Function(FocusEvent) onBlur,
       void Function(Event) onChange,
-      void Function(Event) onFocus,
+      void Function(FocusEvent) onFocus,
       void Function(Event) onInput,
       void Function(KeyboardEvent) onKeyDown,
       void Function(KeyboardEvent) onKeyPress,
@@ -103,9 +104,9 @@ class Input extends Html5Component {
             ]),
             mergeMap([
               {
-                'blur': onBlur,
+                'blur': castEventHandler<FocusEvent>(onBlur),
                 'change': onChange,
-                'focus': onFocus,
+                'focus': castEventHandler<FocusEvent>(onFocus),
                 'input': onInput,
                 'keydown': castEventHandler<KeyboardEvent>(onKeyDown),
                 'keypress': castEventHandler<KeyboardEvent>(onKeyPress),
@@ -114,4 +115,12 @@ class Input extends Html5Component {
               eventListeners,
             ]),
             []);
+
+  @override
+  Map<String, dynamic> afterAttributeChange(
+      Map<String, dynamic> oldAttrs, Map<String, dynamic> newAttrs) {
+    print([nativeElement, oldAttrs, newAttrs]);
+    nativeElement?.value = newAttrs['value']?.toString();
+    return newAttrs;
+  }
 }
