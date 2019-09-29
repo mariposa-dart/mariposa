@@ -126,7 +126,7 @@ class Renderer<NodeType, ElementType extends NodeType> {
       return renderComponent(cmp, context);
     } else if (vNode is TextNode) {
       return incrementalDom.text(vNode.text);
-    } else if (vNode is SelfClosingNode) {
+    } else if (vNode.children.isEmpty) {
       return incrementalDom.elementVoid(vNode.tagName, key, normAttrs);
     } else {
       incrementalDom.elementOpen(vNode.tagName, key, normAttrs);
