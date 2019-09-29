@@ -55,7 +55,8 @@ main() async {
     return Image(
       src: url,
       style: Style(
-        border: '1px solid red',
+        border: '4px solid red',
+        borderRadius: '4px',
       ),
     );
   }));

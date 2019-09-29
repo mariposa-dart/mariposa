@@ -20,24 +20,29 @@ main() async {
 
   // Extract the names of all possible properties.
   var properties = SplayTreeSet<String>();
-  properties.addAll([
-    'animation',
-    'animation-duration',
-    'animation-name',
-    'animation-timing-function',
-    'animation-delay',
-    'animation-iteration-count',
-    'animation-direction',
-    'animation-fill-mode'
-  ]);
+  // properties.addAll([
+  //   'animation',
+  //   'animation-duration',
+  //   'animation-name',
+  //   'animation-timing-function',
+  //   'animation-delay',
+  //   'animation-iteration-count',
+  //   'animation-direction',
+  //   'animation-fill-mode'
+  // ]);
   //var descriptions = <String, String>{};
   var recases = <String, ReCase>{};
-  var links = doc.getElementsByTagName('a');
+  var valid = RegExp(r'^[a-z-]+$');
+  var links = doc.querySelector('.index').getElementsByTagName('ul li a');
+  // var links = doc.getElementsByTagName('a');
+
+  var change = {'in': r'in_'};
 
   for (var link in links) {
-    var href = link.attributes['href'] ?? '';
+    // var href = link.attributes['href'] ?? '';
 
-    if (href.startsWith('pr_') && !link.text.contains('@')) {
+    // if (href.startsWith('pr_') && !link.text.contains('@')) {
+    if (valid.hasMatch(link.text)) {
       properties.add(link.text);
       //descriptions.putIfAbsent(
       //    link.text, () => link.parent.parent.children[1].text);
@@ -46,6 +51,10 @@ main() async {
 
   for (var property in properties) {
     recases.putIfAbsent(property, () => ReCase(property));
+  }
+
+  String camel(String name) {
+    return change[name] ?? recases[name].camelCase;
   }
 
   var lib = Library((b) {
@@ -63,7 +72,7 @@ main() async {
         b.fields.add(Field((b) {
           b
             ..modifier = FieldModifier.final$
-            ..name = recases[property].camelCase
+            ..name = camel(property)
             ..type = refer('String')
             ..docs.addAll([
               //'/// ${descriptions[property]}.',
@@ -81,7 +90,7 @@ main() async {
           b.optionalParameters.add(Parameter((b) {
             b
               ..named = true
-              ..name = recases[property].camelCase
+              ..name = camel(property)
               ..toThis = true;
           }));
         }
@@ -96,7 +105,7 @@ main() async {
             var named = <String, Expression>{};
 
             for (var property in properties) {
-              var name = recases[property].camelCase;
+              var name = camel(property);
               named[name] = CodeExpression(Code('$name ?? this.$name'));
             }
 
@@ -107,7 +116,7 @@ main() async {
           b.optionalParameters.add(Parameter((b) {
             b
               ..named = true
-              ..name = recases[property].camelCase
+              ..name = camel(property)
               ..type = refer('String');
           }));
         }
@@ -118,7 +127,7 @@ main() async {
         var values = <Expression, Expression>{};
 
         for (var property in properties) {
-          values[literalString(property)] = refer(recases[property].camelCase);
+          values[literalString(property)] = refer(camel(property));
         }
 
         b
@@ -136,7 +145,8 @@ main() async {
     }));
   });
 
-  var dartSource = DartFormatter().format(lib.accept(DartEmitter()).toString());
+  var dartSource = lib.accept(DartEmitter()).toString();
+  dartSource = DartFormatter().format(dartSource);
 
   var outFile = File(styleFilePath);
   await outFile.writeAsString(dartSource);
