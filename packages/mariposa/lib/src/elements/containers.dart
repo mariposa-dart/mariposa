@@ -2,7 +2,7 @@ import 'package:html_builder/html_builder.dart';
 import 'package:universal_html/html.dart' show Event;
 import 'html_element.dart';
 
-class Article extends BaseHtmlComponent {
+class Article extends Html5Component {
   Article(
       {String key,
       String id,
@@ -15,7 +15,7 @@ class Article extends BaseHtmlComponent {
             children);
 }
 
-class Aside extends BaseHtmlComponent {
+class Aside extends Html5Component {
   Aside(
       {String key,
       String id,
@@ -28,7 +28,7 @@ class Aside extends BaseHtmlComponent {
             children);
 }
 
-class Body extends BaseHtmlComponent {
+class Body extends Html5Component {
   Body(
       {String key,
       String id,
@@ -41,7 +41,7 @@ class Body extends BaseHtmlComponent {
             key, 'body', id, className, style, props, eventListeners, children);
 }
 
-class BR extends BaseHtmlComponent {
+class BR extends Html5Component {
   BR(
       {String key,
       String id,
@@ -52,7 +52,7 @@ class BR extends BaseHtmlComponent {
       : super(key, 'br', id, className, style, props, eventListeners, [], true);
 }
 
-class Div extends BaseHtmlComponent {
+class Div extends Html5Component {
   Div(
       {String key,
       String id,
@@ -65,7 +65,7 @@ class Div extends BaseHtmlComponent {
             key, 'div', id, className, style, props, eventListeners, children);
 }
 
-class Head extends BaseHtmlComponent {
+class Head extends Html5Component {
   Head(
       {String key,
       String id,
@@ -78,7 +78,7 @@ class Head extends BaseHtmlComponent {
             key, 'head', id, className, style, props, eventListeners, children);
 }
 
-class Header extends BaseHtmlComponent {
+class Header extends Html5Component {
   Header(
       {String key,
       String id,
@@ -91,7 +91,7 @@ class Header extends BaseHtmlComponent {
             children);
 }
 
-class HR extends BaseHtmlComponent {
+class HR extends Html5Component {
   HR(
       {String key,
       String id,
@@ -102,7 +102,7 @@ class HR extends BaseHtmlComponent {
       : super(key, 'hr', id, className, style, props, eventListeners, [], true);
 }
 
-class Html extends BaseHtmlComponent {
+class Html extends Html5Component {
   Html(
       {String key,
       String id,
@@ -122,7 +122,7 @@ class Html extends BaseHtmlComponent {
   }
 }
 
-class Footer extends BaseHtmlComponent {
+class Footer extends Html5Component {
   Footer(
       {String key,
       String id,
@@ -135,7 +135,7 @@ class Footer extends BaseHtmlComponent {
             children);
 }
 
-class LI extends BaseHtmlComponent {
+class LI extends Html5Component {
   LI(
       {String key,
       String id,
@@ -147,7 +147,7 @@ class LI extends BaseHtmlComponent {
       : super(key, 'li', id, className, style, props, eventListeners, children);
 }
 
-class Main extends BaseHtmlComponent {
+class Main extends Html5Component {
   Main(
       {String key,
       String id,
@@ -160,7 +160,7 @@ class Main extends BaseHtmlComponent {
             key, 'main', id, className, style, props, eventListeners, children);
 }
 
-class Meta extends BaseHtmlComponent {
+class Meta extends Html5Component {
   Meta(
       {String key,
       String id,
@@ -182,7 +182,7 @@ class Meta extends BaseHtmlComponent {
   }
 }
 
-class Nav extends BaseHtmlComponent {
+class Nav extends Html5Component {
   Nav(
       {String key,
       String id,
@@ -195,7 +195,7 @@ class Nav extends BaseHtmlComponent {
             key, 'nav', id, className, style, props, eventListeners, children);
 }
 
-class OList extends BaseHtmlComponent {
+class OList extends Html5Component {
   OList(
       {String key,
       String id,
@@ -207,7 +207,7 @@ class OList extends BaseHtmlComponent {
       : super(key, 'ol', id, className, style, props, eventListeners, children);
 }
 
-class Paragraph extends BaseHtmlComponent {
+class Paragraph extends Html5Component {
   Paragraph(
       {String key,
       String id,
@@ -219,7 +219,7 @@ class Paragraph extends BaseHtmlComponent {
       : super(key, 'p', id, className, style, props, eventListeners, children);
 }
 
-class Section extends BaseHtmlComponent {
+class Section extends Html5Component {
   Section(
       {String key,
       String id,
@@ -232,7 +232,7 @@ class Section extends BaseHtmlComponent {
             children);
 }
 
-class Span extends BaseHtmlComponent {
+class Span extends Html5Component {
   Span(
       {String key,
       String id,
@@ -245,7 +245,7 @@ class Span extends BaseHtmlComponent {
             key, 'span', id, className, style, props, eventListeners, children);
 }
 
-class UList extends BaseHtmlComponent {
+class UList extends Html5Component {
   UList(
       {String key,
       String id,

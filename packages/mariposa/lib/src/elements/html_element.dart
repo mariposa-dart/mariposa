@@ -9,7 +9,7 @@ void Function(Event) castEventHandler<T extends Event>(void Function(T) f) {
   return f == null ? null : (e) => f(e as T);
 }
 
-class BaseHtmlComponent extends ComponentClass {
+class Html5Component extends ComponentClass {
   final Map<String, void Function(Event)> eventListeners = {};
   final Map<String, dynamic> props = {};
   final String id;
@@ -18,7 +18,7 @@ class BaseHtmlComponent extends ComponentClass {
   final bool selfClosing;
   final List<StreamSubscription> _subscriptions = [];
 
-  BaseHtmlComponent(
+  Html5Component(
       String key,
       String tagName,
       this.id,

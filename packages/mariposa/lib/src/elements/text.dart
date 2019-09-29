@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 import 'package:universal_html/html.dart' show Event;
 import 'html_element.dart';
 
-class Text extends BaseHtmlComponent {
+class Text extends Html5Component {
   Text._(String tagName, String text,
       {String key,
       String id,
@@ -110,7 +110,7 @@ class Text extends BaseHtmlComponent {
   }
 }
 
-class Heading extends BaseHtmlComponent {
+class Heading extends Html5Component {
   Heading._(
       String key,
       String tagName,
@@ -196,7 +196,7 @@ class Heading extends BaseHtmlComponent {
   }
 }
 
-class Title extends BaseHtmlComponent {
+class Title extends Html5Component {
   Title(
       {String key,
       String id,

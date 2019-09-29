@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:universal_html/html.dart' show Event, KeyboardEvent;
 import 'html_element.dart';
 
-class Button extends BaseHtmlComponent {
+class Button extends Html5Component {
   Button._(
       {String key,
       String id,
@@ -67,7 +67,7 @@ class Button extends BaseHtmlComponent {
   }
 }
 
-class Input extends BaseHtmlComponent {
+class Input extends Html5Component {
   Input(
       {String key,
       String id,

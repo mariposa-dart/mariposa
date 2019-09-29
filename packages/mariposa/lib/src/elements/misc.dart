@@ -1,9 +1,10 @@
+import 'package:html_builder/elements.dart';
 import 'package:mariposa/mariposa.dart';
 import 'package:meta/meta.dart';
 import 'package:universal_html/html.dart' show Event;
 import 'html_element.dart';
 
-class Image extends BaseHtmlComponent {
+class Image extends Html5Component {
   Image(
       {String key,
       String id,
@@ -41,4 +42,19 @@ class Builder extends ComponentClass {
 
   @override
   Node render() => builder();
+}
+
+class Conditional extends ComponentClass {
+  final bool condition;
+  final Node child;
+
+  Conditional({this.condition = true, @required this.child});
+
+  @override
+  Node render() {
+    if (!condition) {
+      return span(style: 'display: none');
+    }
+    return child;
+  }
 }
