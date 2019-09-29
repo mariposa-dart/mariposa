@@ -21,7 +21,7 @@ main() async {
   app.fallback((req, res) {
     var oldSerializer = res.serializer;
     res.serializer = (x) async {
-      if (x is Component) {
+      if (x is ComponentClass) {
         var doc = HtmlHtmlElement();
         var body = BodyElement();
         doc.append(body);
@@ -29,6 +29,7 @@ main() async {
         res
           ..contentType = MediaType('text', 'html')
           ..write(doc.outerHtml);
+        await res.close();
         return '';
       } else {
         return await oldSerializer(x);

@@ -60,14 +60,44 @@ class Renderer<NodeType, ElementType extends NodeType> {
 
   NodeType renderNode(Node vNode, RenderContext context, {String key}) {
     key ??= vNode.attributes[mariposaKey]?.toString();
+
+    // Remove junk attributes.
+    var attrs = Map<String, dynamic>.from(vNode.attributes ?? {});
+    attrs.removeWhere((k, v) {
+      if (v is Iterable) {
+        return v.isEmpty;
+      } else if (v is Map) {
+        return v.isEmpty;
+      } else {
+        return v == null || v == false;
+      }
+    });
+
+    // Next, normalize attributes to strings.
+    var normAttrs = attrs.map<String, String>((k, v) {
+      if (v is Iterable) {
+        return MapEntry(k, v.join(' ').trim());
+      } else if (v is Map) {
+        var buf = v.entries.fold<StringBuffer>(StringBuffer(), (b, entry) {
+          return b..write('${entry.key}=${entry.value}');
+        });
+        return MapEntry(k, buf.toString());
+      } else {
+        return MapEntry(k, v.toString());
+      }
+    });
+
+    // Remove empty attrs.
+    normAttrs.removeWhere((k, v) => v.isEmpty);
+
     if (vNode is ComponentClass) {
       return renderComponent(vNode, context);
     } else if (vNode is TextNode) {
       return incrementalDom.text(vNode.text);
     } else if (vNode is SelfClosingNode) {
-      return incrementalDom.elementVoid(vNode.tagName, key, vNode.attributes);
+      return incrementalDom.elementVoid(vNode.tagName, key, normAttrs);
     } else {
-      incrementalDom.elementOpen(vNode.tagName, key, vNode.attributes);
+      incrementalDom.elementOpen(vNode.tagName, key, normAttrs);
       for (var child in vNode.children) {
         renderNode(child, context);
       }

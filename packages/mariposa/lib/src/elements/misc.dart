@@ -22,7 +22,7 @@ class Image extends BaseHtmlComponent {
             id,
             className,
             style,
-            Map.from(props)
+            Map.from(props ?? {})
               ..addAll({
                 'alt': alt,
                 'height': height,

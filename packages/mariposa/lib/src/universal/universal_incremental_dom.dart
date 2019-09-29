@@ -74,17 +74,6 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
     var replaceIndex = _childIndexStack.isEmpty ? -1 : _childIndexStack.first;
     Element replace;
 
-    // Remove junk attributes.
-    attributes.removeWhere((k, v) {
-      if (v is Iterable) {
-        return v.isEmpty;
-      } else if (v is Map) {
-        return v.isEmpty;
-      } else {
-        return v == null || v == false;
-      }
-    });
-
     // If we're patching, _childIndex will be -1 at the root.
     if (_isPatching &&
         replaceIndex != -1 &&
