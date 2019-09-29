@@ -1,6 +1,6 @@
 import 'package:html_builder/html_builder.dart';
 import 'package:meta/meta.dart';
-import 'pick_html.dart' show Element;
+import 'package:universal_html/html.dart' show Element;
 import 'render_context.dart';
 
 typedef Node Component();
