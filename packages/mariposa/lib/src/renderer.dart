@@ -76,12 +76,13 @@ class Renderer<NodeType, ElementType extends NodeType> {
     // Next, normalize attributes to strings.
     var normAttrs = attrs.map<String, String>((k, v) {
       if (v is Iterable) {
-        return MapEntry(k, v.join(' ').trim());
+        return MapEntry(k, v.where((x) => x != null).join(' ').trim());
       } else if (v is Map) {
         var buf = v.entries.fold<StringBuffer>(StringBuffer(), (b, entry) {
-          return b..write('${entry.key}=${entry.value}');
+          if (entry.value == null) return b;
+          return b..write('${entry.key}=${entry.value}; ');
         });
-        return MapEntry(k, buf.toString());
+        return MapEntry(k, buf.toString().trim());
       } else {
         return MapEntry(k, v.toString());
       }
