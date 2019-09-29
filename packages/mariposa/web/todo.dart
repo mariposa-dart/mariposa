@@ -37,6 +37,8 @@ class TodoApp extends ComponentClass {
         ),
       BR(),
       Text.italicized('Click a todo item to remove it.'),
+      Text.italicized(
+          'An item starting with "http" will be rendered as an image.'),
       BR(),
       Input<TextInputElement>(
         ref: inputRef,
@@ -65,18 +67,19 @@ class TodoItem extends ComponentClass {
   final Todo todo;
   final void Function() onDelete;
 
-  TodoItem(this.todo, {@required this.onDelete});
-  // : super(key: todo.hashCode.toString());
+  TodoItem(this.todo, {@required this.onDelete})
+      : super(key: todo.hashCode.toString());
 
   @override
   Node render() {
-    // return Node('img', {'src': todo.text, 'style': 'max-height: 3em'});
-
-    // // return Text.bold('wtf?');
-    // return Image(src: todo.text, eventListeners: {'click': (_) => onDelete()});
-    return LI(
-        children: [Text(todo.text)],
-        style: Style(color: 'blue'),
-        eventListeners: {'click': (_) => onDelete()});
+    if (todo.text.startsWith('http')) {
+      return Image(
+          src: todo.text, eventListeners: {'click': (_) => onDelete()});
+    } else {
+      return LI(
+          children: [Text(todo.text)],
+          style: Style(color: 'blue'),
+          eventListeners: {'click': (_) => onDelete()});
+    }
   }
 }

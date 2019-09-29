@@ -52,11 +52,21 @@ abstract class ComponentClass<T extends Element> extends Node {
     return _lastProps = afterAttributeChange(_lastProps, attrs);
   }
 
+  /// Triggered whenever attributes are to be applied to this instance. This occurs
+  /// both on the initial render, and after updates.
+  ///
+  /// If you return a different [Map] from [newAttrs], then this node will be
+  /// re-rendered. Note that the [Map] will not be compared deeply, so if you
+  /// want to a re-render, you must explicitly return a new [Map].
   Map<String, dynamic> afterAttributeChange(
           Map<String, dynamic> oldAttrs, Map<String, dynamic> newAttrs) =>
       newAttrs;
 
+  /// Triggered when a concrete node has been created for this component.
+  ///
+  /// [nativeElement] is available in this function.
   void afterMount() {}
 
+  /// Triggered after the [nativeElement] has been destroyed.
   void afterUnmount() {}
 }

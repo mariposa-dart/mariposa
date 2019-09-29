@@ -150,7 +150,15 @@ class Renderer<NodeType, ElementType extends NodeType> {
 
     var rendered = vNode.render();
 
-    if (rendered is! ComponentClass) {
+    // If our component returned another component, then don't override the
+    // output. Instead, we need to pass the attributes directly to the instance.
+    // TODO: Does this properly work with multiple layers of nesting?
+    if (rendered is ComponentClass) {
+      // If the component changes the computed attributes, it must be re-rendered.
+      var oldAttrs = rendered.attributes;
+      var newAttrs = vNode.handleAttributesFromRender(oldAttrs);
+      if (newAttrs != oldAttrs) rendered = vNode.render();
+    } else {
       // Alert components of new props.
       var newAttrs = vNode.handleAttributesFromRender(rendered.attributes);
       rendered = Node(rendered.tagName, newAttrs, rendered.children);
