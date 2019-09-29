@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:html_builder/html_builder.dart';
 import 'package:mariposa/mariposa.dart';
-import 'package:universal_html/html.dart' show Event;
+import 'package:universal_html/html.dart' show Element, Event;
 import 'style.dart';
 export 'style.dart';
 
@@ -9,7 +9,7 @@ void Function(Event) castEventHandler<T extends Event>(void Function(T) f) {
   return f == null ? null : (e) => f(e as T);
 }
 
-class Html5Component extends ComponentClass {
+class Html5Component<T extends Element> extends ComponentClass<T> {
   final Map<String, void Function(Event)> eventListeners = {};
   final Map<String, dynamic> props = {};
   final String id;

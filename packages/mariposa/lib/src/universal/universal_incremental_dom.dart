@@ -52,7 +52,7 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
           _elementStack.first.append(node);
         } else {
           // In elementOpen(), we pushed a childIndex. Pop it.
-          _childIndexStack.removeFirst();
+          var lastIndex = _childIndexStack.removeFirst();
 
           // However, the parent may be an element with multiple children, so
           // we should increment the child index if so.
@@ -60,6 +60,12 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
             // Because this is an in-place modification, actually do nothing here.
             // Just increment the child index.
             _childIndexStack.addFirst(_childIndexStack.removeFirst() + 1);
+          } else {
+            // If this is the root of the tree we are patching, remove any
+            // leftover children.
+            if (lastIndex < node.children.length) {
+              node.children.removeRange(lastIndex, node.children.length);
+            }
           }
         }
       } else {

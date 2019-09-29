@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:html_builder/html_builder.dart';
+import 'package:universal_html/html.dart' as html;
 import 'component.dart';
 import 'incremental_dom.dart';
 import 'render_context.dart';
@@ -8,6 +9,7 @@ class Renderer<NodeType, ElementType extends NodeType> {
   final IncrementalDom<NodeType, ElementType> incrementalDom;
   final Completer _done = Completer();
   StreamSubscription<NodeType> _createdSub, _deletedSub;
+  int _renderIteration = 0;
   void Function() onUpdate;
 
   final Map<String, ComponentClass> _componentCache = {};
@@ -29,7 +31,7 @@ class Renderer<NodeType, ElementType extends NodeType> {
       _mountedComponents[node] = cmpList;
       for (var cmp in cmpList) {
         cmp
-          ..rawNativeElement = node
+          ..rawNativeElement = node as html.Element
           ..afterMount();
       }
     }
@@ -72,6 +74,7 @@ class Renderer<NodeType, ElementType extends NodeType> {
             ? (component as ComponentClass)
             : component(),
         context);
+    _renderIteration++;
     return node;
   }
 
@@ -107,6 +110,9 @@ class Renderer<NodeType, ElementType extends NodeType> {
 
     // Remove empty attrs.
     normAttrs.removeWhere((k, v) => v.isEmpty);
+
+    // // Add the stamp key.
+    // normAttrs[mariposaStamp] = _renderIteration.toString();
 
     if (vNode is ComponentClass) {
       // If we've already rendered a component of this exact type,

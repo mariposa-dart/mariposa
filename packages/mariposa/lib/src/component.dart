@@ -6,14 +6,16 @@ import 'render_context.dart';
 typedef Node Component();
 
 const String mariposaKey = 'data-mariposa-key';
+const String mariposaStamp = 'data-mariposa-stamp';
 
-abstract class ComponentClass extends Node {
+abstract class ComponentClass<T extends Element> extends Node {
   final String key;
-  Object rawNativeElement;
+
+  Element rawNativeElement;
 
   ComponentClass({String tagName = 'div', this.key}) : super(tagName);
 
-  Element get nativeElement => rawNativeElement as Element;
+  T get nativeElement => rawNativeElement as T;
 
   RenderContext _context;
 
