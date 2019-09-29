@@ -28,10 +28,12 @@ class Renderer<NodeType, ElementType extends NodeType> {
     var cmpList = _unmountedComponents.remove(node);
     if (cmpList != null) {
       _mountedComponents[node] = cmpList;
-      for (var cmp in cmpList) {
-        cmp
-          ..rawNativeElement = node as html.Element
-          ..afterMount();
+      if (onUpdate != null) {
+        for (var cmp in cmpList) {
+          cmp
+            ..rawNativeElement = node as html.Element
+            ..afterMount();
+        }
       }
     }
   }
@@ -41,8 +43,10 @@ class Renderer<NodeType, ElementType extends NodeType> {
     // end its lifecycle.
     var cmpList = _mountedComponents.remove(node);
     if (cmpList != null) {
-      for (var cmp in cmpList) {
-        cmp.afterUnmount();
+      if (onUpdate != null) {
+        for (var cmp in cmpList) {
+          cmp.afterUnmount();
+        }
       }
     }
   }
