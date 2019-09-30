@@ -1,6 +1,7 @@
 import 'package:mariposa/mariposa.dart';
 import 'package:mariposa/universal.dart';
 import 'package:test/test.dart';
+import 'package:universal_html/html.dart';
 
 void main() {
   UniversalIncrementalDom idom;
@@ -63,5 +64,49 @@ void main() {
     test('text cannot be called without parent', () {
       expect(() => idom.text('orphan'), throwsStateError);
     });
+  });
+
+  group('patch', () {
+    test('cannot effectively change root', () {
+      var el = idom.elementVoid('foo', null, {});
+      idom.patch(el, () => idom.elementVoid('bar', null, {'a': 'b'}));
+      expect(el.localName, 'FOO');
+      expect(el.attributes, isEmpty);
+    });
+
+    group('empty root', () {
+      Element root;
+
+      setUp(() {
+        root = idom.elementVoid('div', null, {'id': 'app'});
+      });
+
+      test('add children', () {
+        idom.patch(root, () {
+          idom
+            ..elementVoid('x-app', null, {'foo': 'bar'})
+            ..elementVoid('x-other-app', null, {'food': 'bard'});
+        });
+        print(root.outerHtml);
+        expect(root.outerHtml,
+            '<div id="app"><x-app foo="bar"></x-app><x-other-app food="bard"></x-other-app></div>');
+      });
+
+      test('add text and children', () {
+        idom.patch(root, () {
+          idom
+            ..text('A')
+            ..elementVoid('x-app', null, {'foo': 'bar'})
+            ..text('B')
+            ..elementVoid('x-other-app', null, {'food': 'bard'})
+            ..text('C');
+        });
+        print(root.outerHtml);
+        expect(root.outerHtml,
+            '<div id="app">A<x-app foo="bar"></x-app>B<x-other-app food="bard"></x-other-app>C</div>');
+      });
+    });
+
+    group('one child', () {});
   });
 }
