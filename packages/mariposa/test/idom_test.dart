@@ -29,5 +29,39 @@ void main() {
       expect(el.localName, 'BAR');
       expect(el.attributes, {'baz': 'quux', mariposaKey: 'hello'});
     });
+
+    test('node with children', () {
+      idom.elementOpen('foo', null, {'a': 'b'});
+      idom.elementOpen('bar', null, {'c': 'd'});
+      idom.elementOpen('baz', null, {'e': 'f'});
+      var baz = idom.elementClose('baz');
+      var quux = idom.elementVoid('quux', null, {'g': 'h'});
+      var bar = idom.elementClose('bar');
+      var foo = idom.elementClose('foo');
+      expect(foo.children, hasLength(1));
+      expect(foo.children[0], bar);
+      expect(bar.children, hasLength(2));
+      expect(bar.children, [baz, quux]);
+      print(foo.outerHtml);
+    });
+
+    test('inner text', () {
+      idom.elementOpen('div', null, {});
+      idom..text('hel')..text('lo ')..text('world');
+      var div = idom.elementClose('div');
+      expect(div.text, 'hello world');
+    });
+
+    test('elementClose expects consistent name', () {
+      expect(() {
+        idom
+          ..elementOpen('a', null, {})
+          ..elementClose('b');
+      }, throwsStateError);
+    });
+
+    test('text cannot be called without parent', () {
+      expect(() => idom.text('orphan'), throwsStateError);
+    });
   });
 }
