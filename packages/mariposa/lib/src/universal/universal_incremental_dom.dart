@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'package:mariposa/mariposa.dart' show IncrementalDom, mariposaKey;
+import 'package:mariposa/mariposa.dart' as prefix0;
 import 'package:universal_html/html.dart';
 
 class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
@@ -122,6 +123,9 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
     }
 
     var attrs = attributes.map((k, v) => MapEntry(k, v.toString()));
+    if (id != null) {
+      attrs[prefix0.mariposaKey] = id;
+    }
     if (replace == null) {
       var element = Element.tag(tagName)..attributes.addAll(attrs);
       _elementStack.addFirst(element);
