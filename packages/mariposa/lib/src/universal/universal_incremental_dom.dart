@@ -9,6 +9,7 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
       _onNodeDeleted = StreamController();
   final Queue<Element> _elementStack = Queue();
   final Queue<int> _childIndexStack = Queue();
+  final Set<int> _created = Set();
   bool _isPatching = false;
 
   @override
@@ -27,9 +28,16 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
   StateError _emptyStack() =>
       StateError('The InMemoryIncrementalDom element stack is empty.');
 
+  void createNode(Element node) {
+    if (_created.add(node.hashCode)) {
+      _onNodeCreated.add(node);
+    }
+    node.children.forEach(createNode);
+  }
+
   void destroyNode(Element node) {
-    node.children.forEach(destroyNode);
     _onNodeDeleted.add(node);
+    node.children.forEach(destroyNode);
   }
 
   @override
@@ -51,6 +59,7 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
             _childIndexStack.first >=
                 _elementStack.elementAt(1).children.length) {
           _elementStack.first.append(node);
+          createNode(node);
         } else {
           // In elementOpen(), we pushed a childIndex. Pop it.
           var lastIndex = _childIndexStack.removeFirst();
@@ -64,7 +73,11 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
           } else {
             // If this is the root of the tree we are patching, remove any
             // leftover children.
-            if (lastIndex < node.children.length) {
+            if (lastIndex >= 0 && lastIndex < node.children.length) {
+              node.children
+                  .skip(lastIndex)
+                  .take(node.children.length - lastIndex)
+                  .forEach(destroyNode);
               node.children.removeRange(lastIndex, node.children.length);
             }
           }
@@ -72,6 +85,9 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
       } else {
         _elementStack.first.append(node);
       }
+    }
+    if (!_isPatching) {
+      createNode(node);
     }
     return node;
   }

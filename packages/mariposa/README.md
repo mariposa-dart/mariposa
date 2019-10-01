@@ -4,7 +4,18 @@
 [![Build status](https://travis-ci.org/mariposa-dart/mariposa.svg?branch=master)](https://travis-ci.org/mariposa-dart/mariposa)
 ![License](https://img.shields.io/github/license/mariposa-dart/mariposa.svg)
 
-Stupid-simple, low-level Web application library built with
-[Incremental DOM](https://github.com/google/incremental-dom)
-and `html_builder`.
+React-esque Web application framework for Dart. Supports SSR and more.
 Comparable to React or Flutter.
+
+```dart
+class DateTimeView extends ComponentClass {
+  render() {
+    return Div(children: [Text('$date')]);
+  }
+}
+
+runMariposaApp(
+  () => DateTimeView(DateTime.now()),
+  querySelector('#app'),
+);
+```
