@@ -56,8 +56,9 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
       // Otherwise, add the element to the parent.
       if (_isPatching) {
         if (_childIndexStack.length < 2 ||
-            _childIndexStack.first >=
-                _elementStack.elementAt(1).children.length) {
+            (_elementStack.length >= 2 &&
+                _childIndexStack.first >=
+                    _elementStack.elementAt(1).children.length)) {
           _elementStack.first.append(node);
           createNode(node);
         } else {
@@ -100,7 +101,7 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
     // If we're patching, _childIndex will be -1 at the root.
     if (_isPatching &&
         replaceIndex != -1 &&
-        replaceIndex >= _elementStack.first.children.length) {
+        replaceIndex < _elementStack.first.children.length) {
       // If we're patching, see if we can find an existing element.
       // Loop through the parent's children, searching until we find the `id`.
       // If we find the ID, delete all of the existing children that precede it.
@@ -132,9 +133,10 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
     }
 
     // If the two elements do not share a tag name, delete the old one.
-    if (replace != null && tagName != replace.localName) {
+    if (replace != null && tagName != replace.localName.toLowerCase()) {
       destroyNode(replace);
-      _elementStack.first.children[_childIndexStack.first] = null;
+      // print('Trying to replace $replace with $tagName');
+      // _elementStack.first.children[_childIndexStack.first] = null;
       replace = null;
     }
 
@@ -166,7 +168,8 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
     var oldP = _isPatching;
     _isPatching = true;
     _elementStack.addFirst(element);
-    _childIndexStack.addFirst(-1);
+    // _childIndexStack.addFirst(-1);
+    _childIndexStack.addFirst(0);
     callback();
     // _childIndexStack.removeFirst();
     _isPatching = oldP;
@@ -178,7 +181,22 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
       throw _emptyStack();
     }
     var node = Text(text);
-    _elementStack.first.append(node);
+    if (!_isPatching) {
+      _elementStack.first.append(node);
+    } else {
+      var childIndex = _childIndexStack.first;
+      var parent = _elementStack.first;
+      if (childIndex < parent.childNodes.length) {
+        var existing = parent.childNodes[childIndex];
+        parent.childNodes[childIndex] = Text(text);
+        if (existing is Element) destroyNode(existing);
+      } else {
+        parent.append(node);
+      }
+      _childIndexStack
+        ..removeFirst()
+        ..addFirst(childIndex + 1);
+    }
     return node;
   }
 }

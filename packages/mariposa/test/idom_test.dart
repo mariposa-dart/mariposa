@@ -107,6 +107,35 @@ void main() {
       });
     });
 
-    group('one child', () {});
+    group('non-empty root', () {
+      Element root;
+
+      setUp(() {
+        idom
+          ..elementOpen('div', null, {'id': 'app'})
+          ..elementVoid('x-app', null, {'foo': 'bar'})
+          ..elementOpen('x-other-app', null, {'food': 'bard'})
+          ..text('Text!F')
+          ..elementClose('x-other-app');
+        root = idom.elementClose('div');
+      });
+
+      test('change text of child', () {
+        idom.patch(root, () {
+          idom
+            ..elementVoid('x-app', null, {'foo': 'bar'})
+            ..elementOpen('x-other-app', null, {'food': 'bard'})
+            ..text('Changed text!')
+            ..elementClose('x-other-app');
+        });
+        print(root.outerHtml);
+        expect(root.children, hasLength(2));
+        expect(root.children[0].localName, 'X-APP');
+        expect(root.children[0].children, isEmpty);
+        expect(root.children[1].localName, 'X-OTHER-APP');
+        expect(root.children[1].childNodes, hasLength(1));
+        expect(root.children[1].text, 'Changed text!');
+      });
+    });
   });
 }
