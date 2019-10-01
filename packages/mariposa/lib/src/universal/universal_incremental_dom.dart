@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
 import 'package:mariposa/mariposa.dart' show IncrementalDom, mariposaKey;
-import 'package:mariposa/mariposa.dart' as prefix0;
 import 'package:universal_html/html.dart';
 
 class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
@@ -58,7 +57,7 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
         if (_childIndexStack.length < 2 ||
             (_elementStack.length >= 2 &&
                 _childIndexStack.first >=
-                    _elementStack.elementAt(1).children.length)) {
+                    _elementStack.elementAt(1).childNodes.length)) {
           _elementStack.first.append(node);
           createNode(node);
         } else {
@@ -74,12 +73,13 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
           } else {
             // If this is the root of the tree we are patching, remove any
             // leftover children.
-            if (lastIndex >= 0 && lastIndex < node.children.length) {
-              node.children
+            if (lastIndex >= 0 && lastIndex < node.childNodes.length) {
+              node.childNodes
                   .skip(lastIndex)
-                  .take(node.children.length - lastIndex)
+                  .take(node.childNodes.length - lastIndex)
+                  .whereType<Element>()
                   .forEach(destroyNode);
-              node.children.removeRange(lastIndex, node.children.length);
+              node.childNodes.removeRange(lastIndex, node.children.length);
             }
           }
         }
@@ -96,12 +96,12 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
   @override
   void elementOpen(String tagName, String id, Map<String, dynamic> attributes) {
     var replaceIndex = _childIndexStack.isEmpty ? -1 : _childIndexStack.first;
-    Element replace;
+    Node replace;
 
     // If we're patching, _childIndex will be -1 at the root.
     if (_isPatching &&
         replaceIndex != -1 &&
-        replaceIndex < _elementStack.first.children.length) {
+        replaceIndex < _elementStack.first.childNodes.length) {
       // If we're patching, see if we can find an existing element.
       // Loop through the parent's children, searching until we find the `id`.
       // If we find the ID, delete all of the existing children that precede it.
@@ -112,10 +112,10 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
         var destroy = <Element>[];
         var initReplaceIndex = replaceIndex;
         for (replaceIndex;
-            replaceIndex < parent.children.length;
+            replaceIndex < parent.childNodes.length;
             replaceIndex++) {
-          var child = parent.children[replaceIndex];
-          if (child.attributes[mariposaKey] != id) {
+          var child = parent.childNodes[replaceIndex];
+          if (child is Element && child.attributes[mariposaKey] != id) {
             destroy.add(child);
           } else {
             replace = child;
@@ -123,18 +123,18 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
           }
         }
         if (replace != null) {
-          parent.children.removeRange(initReplaceIndex, replaceIndex);
+          parent.childNodes.removeRange(initReplaceIndex, replaceIndex);
           destroy.forEach(destroyNode);
         }
       }
       if (replace == null) {
-        replace = parent.children[_childIndexStack.first];
+        replace = parent.childNodes[_childIndexStack.first];
       }
     }
 
     // If the two elements do not share a tag name, delete the old one.
-    if (replace != null && tagName != replace.localName.toLowerCase()) {
-      destroyNode(replace);
+    if (replace is Element && tagName != replace.localName.toLowerCase()) {
+      destroyNode(replace as Element);
       // print('Trying to replace $replace with $tagName');
       // _elementStack.first.children[_childIndexStack.first] = null;
       replace = null;
@@ -142,12 +142,12 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
 
     var attrs = attributes.map((k, v) => MapEntry(k, v.toString()));
     if (id != null) {
-      attrs[prefix0.mariposaKey] = id;
+      attrs[mariposaKey] = id;
     }
     if (replace == null) {
       var element = Element.tag(tagName)..attributes.addAll(attrs);
       _elementStack.addFirst(element);
-    } else {
+    } else if (replace is Element) {
       replace.attributes
         ..clear()
         ..addAll(attrs);
@@ -188,7 +188,8 @@ class UniversalIncrementalDom extends IncrementalDom<Node, Element> {
       var parent = _elementStack.first;
       if (childIndex < parent.childNodes.length) {
         var existing = parent.childNodes[childIndex];
-        parent.childNodes[childIndex] = Text(text);
+        // parent.childNodes[childIndex] = Text(text);
+        parent.childNodes[childIndex].replaceWith(Text(text));
         if (existing is Element) destroyNode(existing);
       } else {
         parent.append(node);
